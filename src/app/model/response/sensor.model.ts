@@ -1,10 +1,10 @@
 export class Sensor {
-  public readonly address: string;
-  public readonly name: string;
-  public readonly value: number;
-  public readonly units: string;
+  readonly address: string;
+  readonly name: string;
+  readonly value: number;
+  readonly units: string;
 
-  constructor(obj: any) {
+  constructor(obj?: any) {
     const objCpy = obj || {};
     this.address = objCpy.address || '';
     this.name = objCpy.name || '';

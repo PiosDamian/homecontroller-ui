@@ -1,10 +1,11 @@
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { ClassProvider } from '@angular/core';
+import { ClassProvider, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { CommunicationService } from '../../communication/communication.service';
 import { endpoints } from 'src/app/constants/endpoints';
 
+@Injectable()
 export class CommunicationInterceptorService implements HttpInterceptor {
   private nonBlockableRequests = [
     endpoints.switch.replace('{address}', ''),

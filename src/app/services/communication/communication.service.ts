@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, of, ReplaySubject } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { maxTimeoutValue } from 'src/app/constants/const';
+import { AlertType, Alert } from 'src/app/model/alert.model';
+import { v4 as uuidV4 } from 'uuid';
 
 @Injectable({
   providedIn: 'root'
@@ -49,10 +51,18 @@ export class CommunicationService {
   }
 
   error(error: string | HttpErrorResponse, timeout?: number) {
+    let msg: string;
     if (typeof (error) === 'string') {
-      this.addMessage(error, AlertType.ERROR, timeout);
+      msg = error;
+    } else {
+      switch (error.status) {
+        case 401: msg = 'Musisz się zalogować'; break;
+        case 403: msg = 'Nie posiadasz wystarczających uprawnień do wykonania tej akcji'; break;
+        case 404: msg = 'Coś poszło nie tak z wykonaniem rządania. Adres nie został odnaleziony'; break;
+        default: msg = error.statusText;
+      }
     }
-    // todo: resolve error response
+    this.addMessage(msg, AlertType.ERROR, timeout);
   }
 
   get alerts() {
@@ -65,11 +75,27 @@ export class CommunicationService {
 
   private addMessage(message: string, type: AlertType, timeout: number = 5000) {
     const currTimeout = Math.min(maxTimeoutValue, timeout);
+    const alert: Alert = {
+      message,
+      timeout: currTimeout,
+      type,
+      id: uuidV4()
+    };
+    this.$alerts.next([...this.$alerts.getValue(), alert]);
+    this.createAlertTimeout(alert);
+  }
+
+  dismissAlert(alert: Alert) {
+    const alerts = this.$alerts.getValue();
+    const index = alerts.findIndex(curAlert => curAlert.id === alert.id);
+    if (index > -1) {
+      alerts.splice(index, 1);
+    }
+    this.$alerts.next(alerts);
+  }
+
+  private createAlertTimeout(alert: Alert) {
+    setTimeout(() => this.dismissAlert(alert), alert.timeout);
   }
 }
 
-export enum AlertType {
-  INFO = 'info',
-  WARNING = 'warning',
-  ERROR = 'error'
-}

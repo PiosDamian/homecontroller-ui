@@ -6,12 +6,13 @@ import { map } from 'rxjs/operators';
 import { endpoints } from 'src/app/constants/endpoints';
 import { Sensor } from 'src/app/model/response/sensor.model';
 import { Switcher } from 'src/app/model/response/switcher.model';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   getSensors(): Observable<Sensor[]> {
     return this.http
@@ -31,5 +32,13 @@ export class HttpService {
       .pipe(
         map(() => null)
       );
+  }
+
+  getStateObservable(id: string) {
+    return new EventSource(this.router.createUrlTree([endpoints.registerListener], {
+      queryParams: {
+        id
+      }
+    }).toString());
   }
 }

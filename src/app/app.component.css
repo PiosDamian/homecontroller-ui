@@ -1,0 +1,32 @@
+.alerts {
+  background-color: transparent;
+  position: fixed;
+  z-index: 9999;
+  right: 1%;
+  top: 1%;
+}
+
+.alert-danger {
+  color: #ff0011;
+  background-color: rgba(35, 35, 35, 0.9);
+}
+
+.alert-info {
+  color: #fff;
+  background-color: rgba(35, 35, 35, 0.9);
+}
+
+.alert-warning {
+  color: #FF6600;
+  background-color: rgba(35, 35, 35, 0.9);
+}
+
+.alert {
+  position: relative;
+  padding: .75rem 2.25rem;
+  margin-bottom: 1rem;
+  border: 2px solid transparent;
+  border-color: #ff6600;
+  border-radius: .45rem;
+  text-align: center;
+}
