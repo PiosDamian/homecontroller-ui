@@ -1,7 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
-import { empty, Observable, Observer } from 'rxjs';
+import { Observable, Observer } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
-
 import { CommunicationService } from '../communication/communication.service';
 import { HttpService } from '../http/http.service';
 
@@ -12,76 +12,41 @@ export class EventSourceService {
 
   private readonly id: string;
   private eventSource: EventSource;
-  private readonly eventListenerMap = new Map<string, EventListeners>();
-  private registerListeners = true;
+  private readonly $events: Observable<PushMessage>;
 
-  constructor(private http: HttpService, private ngZone: NgZone, private communication: CommunicationService) {
+  constructor(private http: HttpService, ngZone: NgZone, communication: CommunicationService) {
     this.id = uuid();
-    this.eventSource = this.http.getStateObservable(this.id);
-    this.eventSource.onerror = event => {
-      ngZone.run(() => {
-        this.communication.error('Wystąpił problem z utowrzeniem kanału komunikacyjnego<br>Aktualizacje w czasie rzeczywistym nie będą możliwe');
-      });
-      this.registerListeners = false;
-      this.eventSource.onerror = null;
-    };
+    this.$events = Observable.create((observer: Observer<PushMessage>) => {
+      this.eventSource = this.http.getEventsObservable(this.id);
+      this.eventSource.onerror = (event: Event) => {
+        ngZone.run(() => {
+          communication.error(`Problem z kanałem notyfikacji`);
+          observer.error(new Error(`Unknown problem with push canal`));
+        });
+      };
+      this.eventSource.onmessage = (event: MessageEvent) =>
+        ngZone.run(() => observer.next(JSON.parse(event.data)))
+    });
     window.onbeforeunload = this.onClose.bind(this);
   }
 
-  addListener(eventName: string, id: string): Observable<string> {
-    if (this.registerListeners) {
-      return Observable.create((observer: Observer<string>) => {
-        const eventListeners: EventListeners = {
-          eventName,
-          listener: (event: Event) => {
-            this.ngZone.run(() => {
-              console.log(event);
-              observer.next((event as MessageEvent).data);
-            });
-          },
-          errorListener: (event: Event) => {
-            this.ngZone.run(() => observer.error(event));
-          }
-        };
-        this.eventSource.addEventListener(eventName, eventListeners.listener);
-        this.eventSource.addEventListener('error', eventListeners.errorListener);
-        this.eventListenerMap.set(id, eventListeners);
-      });
-    } else {
-      return empty();
-    }
+  getMessageForTypes(...types: string[]) {
+    return this.$events
+      .pipe(
+        filter(message => types.includes(message.type))
+      );
   }
 
-  removeListener(id: string) {
-    const eventListeners = this.eventListenerMap.get(id);
-    if (eventListeners) {
-      this.unregisterListeners(eventListeners);
-      this.eventListenerMap.delete(id);
-    } else {
-      throw new Error(`No such id ${id}`);
-    }
-  }
-
-  private unregisterListeners(eventListeners: EventListeners) {
-    this.eventSource.removeEventListener(eventListeners.eventName, eventListeners.listener);
-    this.eventSource.removeEventListener('error', eventListeners.errorListener);
-  }
-
-  private onClose() {
-    const entryIterator = this.eventListenerMap.entries();
-    let eventListenersEntry = entryIterator.next();
-    while (!eventListenersEntry.done) {
-      this.unregisterListeners(eventListenersEntry.value[1]);
-      this.eventListenerMap.delete(eventListenersEntry.value[0]);
-      eventListenersEntry = entryIterator.next();
-    }
+  private onClose(event: BeforeUnloadEvent) {
+    event.stopPropagation;
+    event.returnValue = undefined;
     this.eventSource.close();
+    this.http.unregisterEventsObservable(this.id).subscribe({ error: () => { } });
     return true;
   }
 }
 
-interface EventListeners {
-  readonly eventName: string;
-  readonly listener: EventListenerOrEventListenerObject;
-  readonly errorListener: (event: Event) => any;
+interface PushMessage {
+  type: string;
+  payload: any
 }

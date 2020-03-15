@@ -34,8 +34,16 @@ export class HttpService {
       );
   }
 
-  getStateObservable(id: string) {
+  getEventsObservable(id: string) {
     return new EventSource(this.router.createUrlTree([endpoints.registerListener], {
+      queryParams: {
+        id
+      }
+    }).toString());
+  }
+
+  unregisterEventsObservable(id: string) {
+    return this.http.get<void>(this.router.createUrlTree([endpoints.unregisterListener], {
       queryParams: {
         id
       }
