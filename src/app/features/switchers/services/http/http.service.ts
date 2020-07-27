@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Sensor } from 'src/app/model/response/sensor.model';
-import { Switcher } from 'src/app/model/response/switcher.model';
-import { endpoints } from 'src/app/services/constants/endpoints';
+import { endpoints } from '../../constants/endpoints';
+import { Sensor } from '../../model/response/sensor.model';
+import { Switcher } from '../../model/response/switcher.model';
 
 @Injectable({
   providedIn: 'root'
@@ -23,29 +23,5 @@ export class HttpService {
 
   switch(address: number): Observable<void> {
     return this.http.get(endpoints.switch.replace('{address}', '' + address)).pipe(map(() => null));
-  }
-
-  getEventsObservable(id: string) {
-    return new EventSource(
-      this.router
-        .createUrlTree([endpoints.registerListener], {
-          queryParams: {
-            id
-          }
-        })
-        .toString()
-    );
-  }
-
-  unregisterEventsObservable(id: string) {
-    return this.http.get<void>(
-      this.router
-        .createUrlTree([endpoints.unregisterListener], {
-          queryParams: {
-            id
-          }
-        })
-        .toString()
-    );
   }
 }

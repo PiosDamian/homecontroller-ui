@@ -1,8 +1,7 @@
+import { animate, style, transition, trigger } from '@angular/animations';
 import { Component } from '@angular/core';
-import { trigger, style, transition, animate } from '@angular/animations';
-
-import { CommunicationService } from './services/communication/communication.service';
-import { EventSourceService } from './services/event-source/event-source.service';
+import { CommunicationService } from './core/services/communication/communication.service';
+import { EventSourceService } from './core/services/event-source/event-source.service';
 
 @Component({
   selector: 'app-root',
@@ -10,13 +9,12 @@ import { EventSourceService } from './services/event-source/event-source.service
   styleUrls: ['./app.component.css'],
   animations: [
     trigger('alertState', [
-      transition(':enter', [
-        style({ opacity: 0 }), animate(500)
-      ]),
+      transition(':enter', [style({ opacity: 0 }), animate(500)]),
       transition(':leave', [
         style({ opacity: 1, height: '*' }),
-        animate(500, style(
-          {
+        animate(
+          500,
+          style({
             opacity: 0,
             height: 0,
             marginTop: 0,
@@ -26,13 +24,12 @@ import { EventSourceService } from './services/event-source/event-source.service
             top: '-100px',
             paddingTop: 0,
             paddingBottom: 0
-          }
-        ))
-      ]),
+          })
+        )
+      ])
     ])
   ]
-
 })
 export class AppComponent {
-  constructor(eventSourceService: EventSourceService, public communication: CommunicationService) { }
+  constructor(eventSourceService: EventSourceService, public communication: CommunicationService) {}
 }

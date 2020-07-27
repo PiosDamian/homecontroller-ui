@@ -1,0 +1,8 @@
+{
+  "/gateway": {
+    "target": "https://homepi:5000",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  }
+}

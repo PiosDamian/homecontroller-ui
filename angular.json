@@ -62,7 +62,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "home-controller:build"
+            "browserTarget": "home-controller:build",
+            "proxyConfig": "src/proxy.config.json"
           },
           "configurations": {
             "production": {
@@ -119,6 +120,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "home-controller"
+    }
+  },
+  "defaultProject": "home-controller",
+  "cli": {
+    "analytics": "9a3301db-2bb2-4baa-9c3e-42640063db96"
+  }
 }

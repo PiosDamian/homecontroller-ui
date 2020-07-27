@@ -2,10 +2,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, of, ReplaySubject } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import { maxTimeoutValue } from 'src/app/constants/const';
+import { maxTimeoutValue } from 'src/app/core/constants/const';
 import { Alert, AlertType } from 'src/app/model/alert.model';
 import { v4 as uuidV4 } from 'uuid';
-import { CoreModule } from '../core.module';
+import { CoreModule } from '../../core.module';
 
 @Injectable({
   providedIn: CoreModule
