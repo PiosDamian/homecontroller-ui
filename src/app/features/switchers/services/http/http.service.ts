@@ -6,9 +6,10 @@ import { map } from 'rxjs/operators';
 import { endpoints } from '../../constants/endpoints';
 import { Sensor } from '../../model/response/sensor.model';
 import { Switcher } from '../../model/response/switcher.model';
+import { SwitchersModule } from '../../switchers.module';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: SwitchersModule
 })
 export class HttpService {
   constructor(private http: HttpClient, private router: Router) {}

@@ -1,23 +1,21 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Switcher } from 'src/app/model/response/switcher.model';
-import { HttpService } from '../http/http.service';
 import { first } from 'rxjs/operators';
+import { Switcher } from '../../model/response/switcher.model';
+import { SwitchersModule } from '../../switchers.module';
+import { HttpService } from '../http/http.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: SwitchersModule
 })
 export class SwitcherService {
   private $switchers = new BehaviorSubject<Switcher[]>([]);
 
   constructor(private httpService: HttpService) {
-    httpService.getSwitchers()
-      .pipe(
-        first()
-      )
-      .subscribe(
-        switchers => this.$switchers.next(switchers)
-      );
+    httpService
+      .getSwitchers()
+      .pipe(first())
+      .subscribe(switchers => this.$switchers.next(switchers));
   }
 
   get switchers() {

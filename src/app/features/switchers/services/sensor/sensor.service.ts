@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
-import { HttpService } from '../http/http.service';
 import { BehaviorSubject } from 'rxjs';
-import { Sensor } from 'src/app/model/response/sensor.model';
 import { first } from 'rxjs/operators';
+import { Sensor } from '../../model/response/sensor.model';
+import { SwitchersModule } from '../../switchers.module';
+import { HttpService } from '../http/http.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: SwitchersModule
 })
 export class SensorService {
   private $sensors = new BehaviorSubject<Sensor[]>([]);
 
   constructor(private httpService: HttpService) {
-    httpService.getSensors()
-      .pipe(
-        first()
-      )
+    httpService
+      .getSensors()
+      .pipe(first())
       .subscribe(sensors => this.$sensors.next(sensors));
   }
 
