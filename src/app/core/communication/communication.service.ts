@@ -3,14 +3,14 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, of, ReplaySubject } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { maxTimeoutValue } from 'src/app/constants/const';
-import { AlertType, Alert } from 'src/app/model/alert.model';
+import { Alert, AlertType } from 'src/app/model/alert.model';
 import { v4 as uuidV4 } from 'uuid';
+import { CoreModule } from '../core.module';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: CoreModule
 })
 export class CommunicationService {
-
   private $spinner = new ReplaySubject<boolean>(1);
   private spinnerCounter = 0;
 
@@ -29,12 +29,8 @@ export class CommunicationService {
   hideSpinner() {
     if (--this.spinnerCounter <= 0) {
       of(null)
-        .pipe(
-          delay(1)
-        )
-        .subscribe(
-          () => this.$spinner.next(false)
-        );
+        .pipe(delay(1))
+        .subscribe(() => this.$spinner.next(false));
     }
 
     if (this.spinnerCounter === 0) {
@@ -52,14 +48,21 @@ export class CommunicationService {
 
   error(error: string | HttpErrorResponse, timeout?: number) {
     let msg: string;
-    if (typeof (error) === 'string') {
+    if (typeof error === 'string') {
       msg = error;
     } else {
       switch (error.status) {
-        case 401: msg = 'Musisz się zalogować'; break;
-        case 403: msg = 'Nie posiadasz wystarczających uprawnień do wykonania tej akcji'; break;
-        case 404: msg = 'Coś poszło nie tak z wykonaniem rządania. Adres nie został odnaleziony'; break;
-        default: msg = error.statusText;
+        case 401:
+          msg = 'Musisz się zalogować';
+          break;
+        case 403:
+          msg = 'Nie posiadasz wystarczających uprawnień do wykonania tej akcji';
+          break;
+        case 404:
+          msg = 'Coś poszło nie tak z wykonaniem rządania. Adres nie został odnaleziony';
+          break;
+        default:
+          msg = error.statusText;
       }
     }
     this.addMessage(msg, AlertType.ERROR, timeout);
@@ -98,4 +101,3 @@ export class CommunicationService {
     setTimeout(() => this.dismissAlert(alert), alert.timeout);
   }
 }
-

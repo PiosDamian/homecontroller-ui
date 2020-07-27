@@ -1,52 +1,51 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
-import { endpoints } from 'src/app/constants/endpoints';
 import { Sensor } from 'src/app/model/response/sensor.model';
 import { Switcher } from 'src/app/model/response/switcher.model';
-import { Router } from '@angular/router';
+import { endpoints } from 'src/app/services/constants/endpoints';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpService {
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router) {}
 
   getSensors(): Observable<Sensor[]> {
-    return this.http
-      .get(endpoints.sensors)
-      .pipe(map((ar: any[]) => ar.map(el => new Sensor(el))));
+    return this.http.get(endpoints.sensors).pipe(map((ar: any[]) => ar.map(el => new Sensor(el))));
   }
 
   getSwitchers(): Observable<Switcher[]> {
-    return this.http
-      .get(endpoints.switchers)
-      .pipe(map((ar: any[]) => ar.map(el => new Switcher(el))));
+    return this.http.get(endpoints.switchers).pipe(map((ar: any[]) => ar.map(el => new Switcher(el))));
   }
 
   switch(address: number): Observable<void> {
-    return this.http
-      .get(endpoints.switch.replace('{address}', '' + address))
-      .pipe(
-        map(() => null)
-      );
+    return this.http.get(endpoints.switch.replace('{address}', '' + address)).pipe(map(() => null));
   }
 
   getEventsObservable(id: string) {
-    return new EventSource(this.router.createUrlTree([endpoints.registerListener], {
-      queryParams: {
-        id
-      }
-    }).toString());
+    return new EventSource(
+      this.router
+        .createUrlTree([endpoints.registerListener], {
+          queryParams: {
+            id
+          }
+        })
+        .toString()
+    );
   }
 
   unregisterEventsObservable(id: string) {
-    return this.http.get<void>(this.router.createUrlTree([endpoints.unregisterListener], {
-      queryParams: {
-        id
-      }
-    }).toString());
+    return this.http.get<void>(
+      this.router
+        .createUrlTree([endpoints.unregisterListener], {
+          queryParams: {
+            id
+          }
+        })
+        .toString()
+    );
   }
 }
