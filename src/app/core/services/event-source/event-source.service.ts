@@ -3,10 +3,11 @@ import { Observable, Observer } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { CommunicationService } from 'src/app/core/services/communication/communication.service';
 import { v4 as uuid } from 'uuid';
+import { CoreModule } from '../../core.module';
 import { HttpService } from '../http/http.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: CoreModule
 })
 export class EventSourceService {
   private readonly id: string;
@@ -43,5 +44,5 @@ export class EventSourceService {
 
 interface PushMessage {
   type: string;
-  payload: any;
+  payload: { [key: string]: any };
 }

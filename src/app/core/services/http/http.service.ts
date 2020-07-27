@@ -1,10 +1,11 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { endpoints } from '../../constants/endpoints';
+import { CoreModule } from '../../core.module';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: CoreModule
 })
 export class HttpService {
   constructor(private router: Router, private http: HttpClient) {}
@@ -22,14 +23,6 @@ export class HttpService {
   }
 
   unregisterEventsObservable(id: string) {
-    return this.http.get<void>(
-      this.router
-        .createUrlTree([endpoints.unregisterListener], {
-          queryParams: {
-            id
-          }
-        })
-        .toString()
-    );
+    return this.http.get<void>(endpoints.unregisterListener, { params: new HttpParams({ fromObject: { id } }) });
   }
 }

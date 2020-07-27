@@ -1,5 +1,1 @@
-<div class="alerts">
-  <div [ngClass]="alert.type" class="alert" *ngFor="let alert of (communication.alerts | async)"
-    (click)="communication.dismissAlert(alert);" [@alertState] [innerHTML]="alert.message">
-  </div>
-</div>
+<router-outlet></router-outlet>

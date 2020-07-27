@@ -2,17 +2,21 @@ import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest
 import { ClassProvider, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { endpoints } from 'src/app/services/constants/endpoints';
+import { endpoints } from '../../constants/endpoints';
 import { CommunicationService } from '../communication/communication.service';
 
 @Injectable()
 export class CommunicationInterceptorService implements HttpInterceptor {
-  private nonBlockableRequests = [endpoints.switch.replace('{address}', ''), endpoints.registerListener, endpoints.unregisterListener];
+  private static nonBlockingRequests = [endpoints.registerListener, endpoints.unregisterListener];
 
   constructor(private communicationService: CommunicationService) {}
 
+  static addNonBlockingRequests(urls: string[]) {
+    urls.forEach(url => CommunicationInterceptorService.nonBlockingRequests.push(url));
+  }
+
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const showSpinner = !this.nonBlockableRequests.some(url => req.url.startsWith(url));
+    const showSpinner = !CommunicationInterceptorService.nonBlockingRequests.some(url => req.url.startsWith(url));
     if (showSpinner) {
       this.communicationService.showSpinner();
     }

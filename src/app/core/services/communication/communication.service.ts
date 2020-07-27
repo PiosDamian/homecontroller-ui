@@ -1,36 +1,38 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, of, ReplaySubject } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { BehaviorSubject, of } from 'rxjs';
+import { delay, filter, tap } from 'rxjs/operators';
 import { maxTimeoutValue } from 'src/app/core/constants/const';
-import { Alert, AlertType } from 'src/app/model/alert.model';
 import { v4 as uuidV4 } from 'uuid';
-import { CoreModule } from '../../core.module';
+import { LoadingComponent } from '../../components/loading/loading.component';
+import { Alert, AlertType } from '../../model/alert.model';
 
-@Injectable({
-  providedIn: CoreModule
-})
+@Injectable()
 export class CommunicationService {
-  private $spinner = new ReplaySubject<boolean>(1);
   private spinnerCounter = 0;
+  private dialogRef: MatDialogRef<LoadingComponent>;
 
   private $alerts = new BehaviorSubject<any[]>([]);
 
-  constructor() {
-    this.$spinner.next(false);
-  }
+  constructor(private dialog: MatDialog) {}
 
   showSpinner() {
-    if (++this.spinnerCounter > 0) {
-      this.$spinner.next(true);
+    if (++this.spinnerCounter > 0 && this.dialogRef == null) {
+      this.dialogRef = this.dialog.open(LoadingComponent, { disableClose: true, width: '50vw' });
     }
   }
 
   hideSpinner() {
     if (--this.spinnerCounter <= 0) {
       of(null)
-        .pipe(delay(1))
-        .subscribe(() => this.$spinner.next(false));
+        .pipe(
+          delay(1),
+          filter(() => !!this.dialogRef),
+          tap(() => this.dialogRef.close()),
+          tap(() => (this.dialogRef = null))
+        )
+        .subscribe();
     }
 
     if (this.spinnerCounter === 0) {
@@ -70,10 +72,6 @@ export class CommunicationService {
 
   get alerts() {
     return this.$alerts.asObservable();
-  }
-
-  get spinner() {
-    return this.$spinner.asObservable();
   }
 
   private addMessage(message: string, type: AlertType, timeout: number = 5000) {
