@@ -3,11 +3,11 @@ import { Injectable, NgZone, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { untilDestroyed } from '@orchestrator/ngx-until-destroyed';
-import { of } from 'rxjs';
+import { timer } from 'rxjs';
 import { BlockingQueue } from 'rxjs-blocking-queue';
-import { delay, filter, first, tap } from 'rxjs/operators';
+import { filter, first, tap } from 'rxjs/operators';
 import { maxTimeoutValue } from 'src/app/core/constants/const';
-import { v4 as uuidV4 } from 'uuid';
+import { AlertComponent } from '../../components/alert/alert.component';
 import { LoadingComponent } from '../../components/loading/loading.component';
 import { Alert, AlertType } from '../../model/alert.model';
 
@@ -21,7 +21,7 @@ export class CommunicationService implements OnDestroy {
   constructor(private dialog: MatDialog, snackBar: MatSnackBar, ngZone: NgZone) {
     this.blockingQueue.element.pipe(untilDestroyed(this)).subscribe(alert => {
       snackBar
-        .open(alert.message, 'Zamknij', { duration: alert.timeout })
+        .openFromComponent(AlertComponent, { duration: alert.timeout, data: alert })
         .afterDismissed()
         .pipe(first())
         .subscribe(() => this.blockingQueue.next());
@@ -36,9 +36,8 @@ export class CommunicationService implements OnDestroy {
 
   hideSpinner() {
     if (--this.spinnerCounter <= 0) {
-      of(null)
+      timer(1)
         .pipe(
-          delay(1),
           filter(() => !!this.dialogRef),
           tap(() => this.dialogRef.close()),
           tap(() => (this.dialogRef = null))
@@ -75,7 +74,7 @@ export class CommunicationService implements OnDestroy {
           msg = 'Coś poszło nie tak z wykonaniem żądania. Adres nie został odnaleziony';
           break;
         default:
-          msg = error.statusText;
+          msg = error.statusText || 'Nieznany błąd';
       }
     }
     this.addMessage(msg, AlertType.ERROR, timeout);
@@ -86,8 +85,7 @@ export class CommunicationService implements OnDestroy {
     const alert: Alert = {
       message,
       timeout: currTimeout,
-      type,
-      id: uuidV4()
+      type
     };
     this.blockingQueue.push(alert);
   }
