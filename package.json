@@ -21,7 +21,9 @@
     "@angular/platform-browser": "~9.1.12",
     "@angular/platform-browser-dynamic": "~9.1.12",
     "@angular/router": "~9.1.12",
+    "@orchestrator/ngx-until-destroyed": "^1.1.1",
     "rxjs": "~6.6.0",
+    "rxjs-blocking-queue": "^1.0.2",
     "tslib": "^1.10.0",
     "uuid": "^7.0.1",
     "zone.js": "~0.10.2"

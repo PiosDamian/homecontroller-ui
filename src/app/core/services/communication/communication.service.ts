@@ -1,21 +1,32 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { BehaviorSubject, of } from 'rxjs';
-import { delay, filter, tap } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { untilDestroyed } from '@orchestrator/ngx-until-destroyed';
+import { of } from 'rxjs';
+import { BlockingQueue } from 'rxjs-blocking-queue';
+import { delay, filter, first, tap } from 'rxjs/operators';
 import { maxTimeoutValue } from 'src/app/core/constants/const';
 import { v4 as uuidV4 } from 'uuid';
 import { LoadingComponent } from '../../components/loading/loading.component';
 import { Alert, AlertType } from '../../model/alert.model';
 
 @Injectable()
-export class CommunicationService {
+export class CommunicationService implements OnDestroy {
+  private readonly blockingQueue = new BlockingQueue<Alert>();
+
   private spinnerCounter = 0;
   private dialogRef: MatDialogRef<LoadingComponent>;
 
-  private $alerts = new BehaviorSubject<any[]>([]);
-
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog, snackBar: MatSnackBar, ngZone: NgZone) {
+    this.blockingQueue.element.pipe(untilDestroyed(this)).subscribe(alert => {
+      snackBar
+        .open(alert.message, 'Zamknij', { duration: alert.timeout })
+        .afterDismissed()
+        .pipe(first())
+        .subscribe(() => this.blockingQueue.next());
+    });
+  }
 
   showSpinner() {
     if (++this.spinnerCounter > 0 && this.dialogRef == null) {
@@ -61,17 +72,13 @@ export class CommunicationService {
           msg = 'Nie posiadasz wystarczających uprawnień do wykonania tej akcji';
           break;
         case 404:
-          msg = 'Coś poszło nie tak z wykonaniem rządania. Adres nie został odnaleziony';
+          msg = 'Coś poszło nie tak z wykonaniem żądania. Adres nie został odnaleziony';
           break;
         default:
           msg = error.statusText;
       }
     }
     this.addMessage(msg, AlertType.ERROR, timeout);
-  }
-
-  get alerts() {
-    return this.$alerts.asObservable();
   }
 
   private addMessage(message: string, type: AlertType, timeout: number = 5000) {
@@ -82,20 +89,8 @@ export class CommunicationService {
       type,
       id: uuidV4()
     };
-    this.$alerts.next([...this.$alerts.getValue(), alert]);
-    this.createAlertTimeout(alert);
+    this.blockingQueue.push(alert);
   }
 
-  dismissAlert(alert: Alert) {
-    const alerts = this.$alerts.getValue();
-    const index = alerts.findIndex(curAlert => curAlert.id === alert.id);
-    if (index > -1) {
-      alerts.splice(index, 1);
-    }
-    this.$alerts.next(alerts);
-  }
-
-  private createAlertTimeout(alert: Alert) {
-    setTimeout(() => this.dismissAlert(alert), alert.timeout);
-  }
+  ngOnDestroy() {}
 }
