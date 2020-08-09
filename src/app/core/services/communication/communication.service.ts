@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable, NgZone, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { untilDestroyed } from '@orchestrator/ngx-until-destroyed';
@@ -18,7 +18,7 @@ export class CommunicationService implements OnDestroy {
   private spinnerCounter = 0;
   private dialogRef: MatDialogRef<LoadingComponent>;
 
-  constructor(private dialog: MatDialog, snackBar: MatSnackBar, ngZone: NgZone) {
+  constructor(private dialog: MatDialog, snackBar: MatSnackBar) {
     this.blockingQueue.element.pipe(untilDestroyed(this)).subscribe(alert => {
       snackBar
         .openFromComponent(AlertComponent, { duration: alert.timeout, data: alert })
@@ -43,9 +43,6 @@ export class CommunicationService implements OnDestroy {
           tap(() => (this.dialogRef = null))
         )
         .subscribe();
-    }
-
-    if (this.spinnerCounter === 0) {
       this.spinnerCounter = 0;
     }
   }

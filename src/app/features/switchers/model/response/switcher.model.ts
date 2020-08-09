@@ -1,8 +1,10 @@
+import { BaseSwitcher } from '../base-switcher';
 import { SwitcherState } from './switcher-state.enum';
 
-export class Switcher {
-  public readonly address: number;
+export class Switcher implements BaseSwitcher {
+  public readonly address: string;
   public readonly name: string;
+  public readonly listenerAddress: string;
   public state: SwitcherState;
 
   constructor(obj?: any) {
@@ -12,5 +14,6 @@ export class Switcher {
     this.address = obj.address;
     this.name = obj.name || '';
     this.state = obj.state || SwitcherState.UNKNOWN;
+    this.listenerAddress = obj.listenerAddress;
   }
 }

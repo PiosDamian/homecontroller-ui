@@ -1,0 +1,8 @@
+<mat-toolbar>
+  <span>Switchers</span>
+</mat-toolbar>
+<app-switcher *ngFor="let switcher of switchers" [switcher]="switcher" (stateChanged)="stateChanged.next($event)">
+</app-switcher>
+<button mat-fab color="primary" (click)="createSwitcher()">
+  <mat-icon>add</mat-icon>
+</button>

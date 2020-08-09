@@ -1,4 +1,4 @@
 export const endpoints = {
-  registerListener: `/listener/register`,
-  unregisterListener: `/listener/unregister`
+  registerListener: `/gateway/listener/register`,
+  unregisterListener: `/gateway/listener/unregister`
 };

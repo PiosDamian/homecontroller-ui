@@ -2,12 +2,9 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { Switcher } from '../../model/response/switcher.model';
-import { SwitchersModule } from '../../switchers.module';
 import { HttpService } from '../http/http.service';
 
-@Injectable({
-  providedIn: SwitchersModule
-})
+@Injectable()
 export class SwitcherService {
   private $switchers = new BehaviorSubject<Switcher[]>([]);
 

@@ -1,44 +1,50 @@
-import { Injectable, NgZone } from '@angular/core';
-import { Observable, Observer } from 'rxjs';
+import { Inject, Injectable, NgZone } from '@angular/core';
+import { Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { CommunicationService } from 'src/app/core/services/communication/communication.service';
 import { v4 as uuid } from 'uuid';
-import { CoreModule } from '../../core.module';
+import { USE_EVENT_SOURCE } from '../../core-injection-tokens.module';
 import { HttpService } from '../http/http.service';
 
-@Injectable({
-  providedIn: CoreModule
-})
+@Injectable()
 export class EventSourceService {
-  private readonly id: string;
+  private id: string;
   private eventSource: EventSource;
-  private readonly $events: Observable<PushMessage>;
+  private $events = new Subject<PushMessage>();
 
-  constructor(private http: HttpService, ngZone: NgZone, communication: CommunicationService) {
-    this.id = uuid();
-    this.$events = new Observable((observer: Observer<PushMessage>) => {
-      this.eventSource = this.http.getEventsObservable(this.id);
-      this.eventSource.onerror = (event: Event) => {
-        ngZone.run(() => {
-          communication.error(`Problem z kanałem notyfikacji`);
-          observer.error(new Error(`Unknown problem with push canal`));
-        });
-      };
-      this.eventSource.onmessage = (event: MessageEvent) => ngZone.run(() => observer.next(JSON.parse(event.data)));
-    });
+  constructor(
+    private http: HttpService,
+    private ngZone: NgZone,
+    private communication: CommunicationService,
+    @Inject(USE_EVENT_SOURCE) private useEventSource: boolean
+  ) {
     window.onbeforeunload = this.onClose.bind(this);
+  }
+
+  openChannel(): Promise<void> {
+    return new Promise(res => {
+      if (this.useEventSource) {
+        this.id = uuid();
+        this.eventSource = this.http.getEventsObservable(this.id);
+        this.eventSource.onerror = (error: ErrorEvent) => {
+          this.ngZone.run(() => {
+            this.communication.error(`Problem z kanałem notyfikacji`, 8000);
+            this.$events.error(error);
+          });
+        };
+        this.eventSource.onmessage = (event: MessageEvent) => {
+          this.ngZone.run(() => this.$events.next(JSON.parse(event.data)));
+        };
+      }
+      res();
+    });
   }
 
   getMessageForTypes(...types: string[]) {
     return this.$events.pipe(filter(message => types.includes(message.type)));
   }
-
   private onClose(event: BeforeUnloadEvent) {
-    event.stopPropagation();
-    event.returnValue = undefined;
-    this.eventSource.close();
-    this.http.unregisterEventsObservable(this.id).subscribe({ error: () => {} });
-    return true;
+    this.http.unregisterEventsObservable(this.id);
   }
 }
 

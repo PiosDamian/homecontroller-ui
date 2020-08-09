@@ -1,7 +1,9 @@
-export class Sensor {
+import { BaseSensor } from '../base-sensor';
+
+export class Sensor implements BaseSensor {
   readonly address: string;
   readonly name: string;
-  readonly value: number;
+  readonly value: string;
   readonly units: string;
 
   constructor(obj?: any) {
