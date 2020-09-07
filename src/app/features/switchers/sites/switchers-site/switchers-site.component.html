@@ -1,1 +1,6 @@
-<app-switchers-list [switchers]="switchersService.switchers | async"></app-switchers-list>
+<mat-toolbar>
+  <span>Switchers</span>
+</mat-toolbar>
+<app-switchers-list [switchers]="switchersService.switchers | async" (switcherUpdated)="onNewSwitcher($event)"
+  (stateChanged)="onTouch($event)" (remove)="deleteSwitcher($event)">
+</app-switchers-list>

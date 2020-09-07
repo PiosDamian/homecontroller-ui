@@ -1,22 +1,23 @@
-import { Component, Inject, OnInit, Optional } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Switcher } from '../../model/response/switcher.model';
+import { untilDestroyed } from '@orchestrator/ngx-until-destroyed';
+import { ManipulateSwitcherData } from '../../model/manipulate-switcher-data.model';
 
 @Component({
   selector: 'app-manipulate-switcher',
   templateUrl: './manipulate-switcher.component.html',
-  styleUrls: ['./manipulate-switcher.component.css']
+  styleUrls: ['./manipulate-switcher.component.scss']
 })
-export class ManipulateSwitcherComponent implements OnInit {
+export class ManipulateSwitcherComponent implements OnInit, OnDestroy {
   form: FormGroup;
 
-  private readonly baseSwitcher: Switcher;
+  readonly baseSwitcher: ManipulateSwitcherData;
 
   constructor(
     private dialogRef: MatDialogRef<ManipulateSwitcherComponent>,
     private fb: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) @Optional() data?: Switcher
+    @Inject(MAT_DIALOG_DATA) data?: ManipulateSwitcherData
   ) {
     if (data) {
       this.baseSwitcher = data;
@@ -26,12 +27,20 @@ export class ManipulateSwitcherComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.fb.group({
-      name: new FormControl(this.baseSwitcher.name || '', [Validators.required]),
-      address: new FormControl(this.baseSwitcher.address || '', [Validators.required]),
+    this.form = this.fb.group({
+      name: new FormControl(this.baseSwitcher.name, [Validators.required]),
+      address: new FormControl(this.baseSwitcher.address, [Validators.required]),
       listenerAddress: new FormControl(this.baseSwitcher.listenerAddress),
-      force: new FormControl(null)
+      force: new FormControl(false)
     });
+
+    this.form
+      .get('force')
+      .valueChanges.pipe(untilDestroyed(this))
+      .subscribe(() => {
+        this.form.get('address').setValue(null);
+        this.form.get('listenerAddress').setValue(null);
+      });
   }
 
   save() {
@@ -42,5 +51,17 @@ export class ManipulateSwitcherComponent implements OnInit {
 
   close() {
     this.dialogRef.close();
+  }
+
+  get pinList() {
+    return this.form.get('force').value
+      ? this.baseSwitcher.allPins
+      : this.baseSwitcher.availablePins
+      ? this.baseSwitcher.availablePins
+      : this.baseSwitcher.allPins;
+  }
+
+  ngOnDestroy() {
+    // required
   }
 }

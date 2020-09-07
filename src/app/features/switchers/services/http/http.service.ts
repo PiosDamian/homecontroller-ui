@@ -13,7 +13,19 @@ export class HttpService {
     return this.http.get(endpoints.switchers).pipe(map((ar: any[]) => ar.map(el => new Switcher(el))));
   }
 
-  switch(address: number): Observable<void> {
-    return this.http.get(endpoints.switch.replace('{address}', '' + address)).pipe(map(() => null));
+  switch(address: string): Observable<void> {
+    return this.http.get(endpoints.switch.replace('${address}', '' + address)).pipe(map(() => null));
+  }
+
+  createSwitcher(newSwitcher: Switcher): Observable<void> {
+    return this.http.post(endpoints.createSwitcher, newSwitcher, { responseType: 'text' }).pipe(map(() => null));
+  }
+
+  updateSwitcher(updatedSwitcher: Switcher): Observable<void> {
+    return this.http.put(endpoints.updateSwitcher, updatedSwitcher, { responseType: 'text' }).pipe(map(() => null));
+  }
+
+  deleteSwitcher(switcher: Switcher): Observable<void> {
+    return this.http.delete(endpoints.switcher.replace('${address}', switcher.address)).pipe(map(() => null));
   }
 }

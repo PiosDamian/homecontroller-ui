@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MaterialModule } from 'src/app/core/material.module';
+import { MaterialModule } from 'src/app/shared/material.module';
 import { ManipulateSwitcherComponent } from './components/manipulate-switcher/manipulate-switcher.component';
 import { SwitcherComponent } from './components/switcher/switcher.component';
 import { SwitchersListComponent } from './components/switchers-list/switchers-list.component';

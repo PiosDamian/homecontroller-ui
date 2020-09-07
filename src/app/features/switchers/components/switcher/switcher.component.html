@@ -1,0 +1,17 @@
+<mat-list-item>
+  <div class="element-holder">
+    <div (click)="stateChanged.next(switcher)">{{switcher.name}}</div>
+    <div>
+      <button mat-button color="primary" (click)="edit.next(switcher)">
+        <mat-icon>
+          edit
+        </mat-icon>
+      </button>
+      <button mat-button color="warn" (click)="remove.next(switcher)">
+        <mat-icon>
+          delete
+        </mat-icon>
+      </button>
+    </div>
+  </div>
+</mat-list-item>

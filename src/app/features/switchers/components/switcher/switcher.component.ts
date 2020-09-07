@@ -12,4 +12,10 @@ export class SwitcherComponent {
 
   @Output()
   stateChanged = new EventEmitter<Switcher>();
+
+  @Output()
+  edit = new EventEmitter<Switcher>();
+
+  @Output()
+  remove = new EventEmitter<Switcher>();
 }
