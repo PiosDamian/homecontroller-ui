@@ -1,8 +1,8 @@
 <mat-list>
-  <app-switcher *ngFor="let switcher of switchers" [switcher]="switcher" (stateChanged)="stateChanged.next($event)"
-    (edit)="editSwitcher($event)" (remove)="remove.next($event)">
+  <app-switcher *ngFor="let switcher of switchers" [switcher]="switcher" [canEdit]="canEdit"
+    (stateChanged)="stateChanged.next($event)" (edit)="editSwitcher($event)" (remove)="remove.next($event)">
   </app-switcher>
 </mat-list>
-<button mat-fab color="primary" (click)="createSwitcher()">
+<button *ngIf="canEdit" mat-fab color="primary" (click)="createSwitcher()">
   <mat-icon>add</mat-icon>
 </button>

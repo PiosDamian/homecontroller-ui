@@ -7,6 +7,10 @@ const routes: Routes = [
     loadChildren: () => import('./features/switchers/switchers.module').then(m => m.SwitchersModule)
   },
   {
+    path: 'sensors',
+    loadChildren: () => import('./features/sensors/sensors.module').then(m => m.SensorsModule)
+  },
+  {
     path: '',
     redirectTo: 'switchers',
     pathMatch: 'full'

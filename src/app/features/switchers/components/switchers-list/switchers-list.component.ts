@@ -15,6 +15,9 @@ export class SwitchersListComponent {
   @Input()
   switchers: Switcher[];
 
+  @Input()
+  canEdit = false;
+
   @Output()
   switcherUpdated = new EventEmitter<StateChange>();
 

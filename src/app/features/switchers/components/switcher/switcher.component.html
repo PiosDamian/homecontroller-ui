@@ -2,16 +2,24 @@
   <div class="element-holder" (click)="stateChanged.next(switcher)">
     <div>{{switcher.name}}</div>
     <div>
-      <button mat-button color="primary" (click)="edit.next(switcher)" stopPropagation>
-        <mat-icon>
-          edit
-        </mat-icon>
-      </button>
-      <button mat-button color="warn" (click)="remove.next(switcher)" stopPropagation>
-        <mat-icon>
-          delete_outline
-        </mat-icon>
-      </button>
+      <span>
+        <button mat-button *ngIf="switcher.state !== 'UNKNOWN'">
+          <mat-icon *ngIf="switcher.state === 'ON'" style.color="yellow">brightness_high</mat-icon>
+          <mat-icon *ngIf="switcher.state === 'OFF'">brightness_low</mat-icon>
+        </button>
+      </span>
+      <span *ngIf="canEdit">
+        <button mat-button color="primary" (click)="edit.next(switcher)" stopPropagation>
+          <mat-icon>
+            edit
+          </mat-icon>
+        </button>
+        <button mat-button color="warn" (click)="remove.next(switcher)" stopPropagation>
+          <mat-icon>
+            delete_outline
+          </mat-icon>
+        </button>
+      </span>
     </div>
   </div>
 </mat-list-item>

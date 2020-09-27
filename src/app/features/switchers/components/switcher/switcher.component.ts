@@ -10,6 +10,9 @@ export class SwitcherComponent {
   @Input()
   switcher: Switcher;
 
+  @Input()
+  canEdit = false;
+
   @Output()
   stateChanged = new EventEmitter<Switcher>();
 

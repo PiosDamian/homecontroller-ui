@@ -1,6 +1,13 @@
 <mat-toolbar>
-  <span>Switchers</span>
+  <div class="flex">
+    <div>Switchers</div>
+    <div>
+      <button mat-fab color="accent" (click)="switchersService.refresh()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </div>
+  </div>
 </mat-toolbar>
-<app-switchers-list [switchers]="switchersService.switchers | async" (switcherUpdated)="onNewSwitcher($event)"
-  (stateChanged)="onTouch($event)" (remove)="deleteSwitcher($event)">
+<app-switchers-list [switchers]="switchersService.switchers | async" [canEdit]="canEdit | async"
+  (switcherUpdated)="onNewSwitcher($event)" (stateChanged)="onTouch($event)" (remove)="deleteSwitcher($event)">
 </app-switchers-list>

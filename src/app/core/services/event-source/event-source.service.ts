@@ -10,7 +10,7 @@ import { HttpService } from '../http/http.service';
 export class EventSourceService {
   private id: string;
   private eventSource: EventSource;
-  private $events = new Subject<PushMessage>();
+  private events$ = new Subject<PushMessage>();
 
   constructor(
     private http: HttpService,
@@ -29,11 +29,11 @@ export class EventSourceService {
         this.eventSource.onerror = (error: ErrorEvent) => {
           this.ngZone.run(() => {
             this.communication.error(`Problem z kanałem notyfikacji`, 8000);
-            this.$events.error(error);
+            this.events$.error(error);
           });
         };
         this.eventSource.onmessage = (event: MessageEvent) => {
-          this.ngZone.run(() => this.$events.next(JSON.parse(event.data)));
+          this.ngZone.run(() => this.events$.next(JSON.parse(event.data)));
         };
       }
       res();
@@ -41,8 +41,13 @@ export class EventSourceService {
   }
 
   getMessageForTypes(...types: string[]) {
-    return this.$events.pipe(filter(message => types.includes(message.type)));
+    return this.messages.pipe(filter(message => types.includes(message.type)));
   }
+
+  get messages() {
+    return this.events$.asObservable();
+  }
+
   private onClose(event: BeforeUnloadEvent) {
     this.http.unregisterEventsObservable(this.id);
   }

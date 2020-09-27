@@ -1,17 +1,25 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Inject, Injectable, OnDestroy } from '@angular/core';
+import { untilDestroyed } from '@orchestrator/ngx-until-destroyed';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { first, tap } from 'rxjs/operators';
+import { SWITCHERS_STATE_CHANGES } from '../../constants/injections-tokens';
+import { StateUpdate } from '../../model/request/state-update.model';
 import { Switcher } from '../../model/response/switcher.model';
 import { HttpService } from '../http/http.service';
 
 @Injectable()
-export class SwitcherService {
+export class SwitcherService implements OnDestroy {
   private readonly switchersMap = new Map<string, Switcher>();
 
   private switchers$ = new BehaviorSubject<Switcher[]>([]);
 
-  constructor(private httpService: HttpService) {
-    httpService
+  constructor(private httpService: HttpService, @Inject(SWITCHERS_STATE_CHANGES) switchersStateChanges: Observable<StateUpdate>) {
+    this.refresh();
+    switchersStateChanges.pipe(untilDestroyed(this)).subscribe(newState => this.updateState(newState));
+  }
+
+  refresh() {
+    this.httpService
       .getSwitchers()
       .pipe(
         first(),
@@ -48,4 +56,12 @@ export class SwitcherService {
       tap(() => this.switchers$.next([...this.switchersMap.values()]))
     );
   }
+
+  private updateState(newState: StateUpdate) {
+    if (this.switchersMap.has(newState.address)) {
+      this.switchersMap.get(newState.address).state = newState.state;
+    }
+  }
+
+  ngOnDestroy(): void {}
 }

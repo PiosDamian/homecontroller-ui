@@ -1,8 +1,10 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, Inject, OnDestroy } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { untilDestroyed } from '@orchestrator/ngx-until-destroyed';
+import { Observable } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
 import { DeleteSwitcherComponent } from '../../components/delete-switcher/delete-switcher.component';
+import { CAN_EDIT_SWITCHER } from '../../constants/injections-tokens';
 import { Switcher } from '../../model/response/switcher.model';
 import { SwitcherService } from '../../services/switcher/switcher.service';
 
@@ -12,7 +14,11 @@ import { SwitcherService } from '../../services/switcher/switcher.service';
   styleUrls: ['./switchers-site.component.scss', '../../components/host-styles.scss']
 })
 export class SwitchersSiteComponent implements OnDestroy {
-  constructor(public switchersService: SwitcherService, private matBottomSheet: MatBottomSheet) {}
+  constructor(
+    public switchersService: SwitcherService,
+    private matBottomSheet: MatBottomSheet,
+    @Inject(CAN_EDIT_SWITCHER) public canEdit: Observable<boolean>
+  ) {}
 
   onNewSwitcher({ switcher, isNew }) {
     if (isNew) {
