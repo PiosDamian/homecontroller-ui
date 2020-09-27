@@ -1,15 +1,15 @@
 <mat-list-item>
-  <div class="element-holder">
-    <div (click)="stateChanged.next(switcher)">{{switcher.name}}</div>
+  <div class="element-holder" (click)="stateChanged.next(switcher)">
+    <div>{{switcher.name}}</div>
     <div>
-      <button mat-button color="primary" (click)="edit.next(switcher)">
+      <button mat-button color="primary" (click)="edit.next(switcher)" stopPropagation>
         <mat-icon>
           edit
         </mat-icon>
       </button>
-      <button mat-button color="warn" (click)="remove.next(switcher)">
+      <button mat-button color="warn" (click)="remove.next(switcher)" stopPropagation>
         <mat-icon>
-          delete
+          delete_outline
         </mat-icon>
       </button>
     </div>

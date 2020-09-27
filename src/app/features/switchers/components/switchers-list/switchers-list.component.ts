@@ -30,7 +30,10 @@ export class SwitchersListComponent {
     this.matDialog
       .open(ManipulateSwitcherComponent, {
         data: {
-          allPins: Array.from(Array(32).keys())
+          pin: {
+            allPins: Array.from(Array(32).keys())
+          },
+          title: 'Create pin'
         } as ManipulateSwitcherData
       })
       .afterClosed()
@@ -45,10 +48,13 @@ export class SwitchersListComponent {
     this.matDialog
       .open(ManipulateSwitcherComponent, {
         data: {
-          address,
-          name,
-          listenerAddress,
-          allPins: Array.from(Array(32).keys())
+          pin: {
+            address,
+            name,
+            listenerAddress,
+            allPins: Array.from(Array(32).keys())
+          },
+          title: 'Edit pin'
         } as ManipulateSwitcherData
       })
       .afterClosed()

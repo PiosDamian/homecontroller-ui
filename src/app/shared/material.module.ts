@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -22,7 +23,8 @@ const materialModules = [
   MatInputModule,
   MatSelectModule,
   MatCheckboxModule,
-  MatListModule
+  MatListModule,
+  MatBottomSheetModule
 ];
 
 @NgModule({

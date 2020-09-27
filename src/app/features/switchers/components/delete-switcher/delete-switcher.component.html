@@ -1,0 +1,13 @@
+<div class="content">
+  Are you sure you want to delete switcher {{data?.name || data?.pinNumber}}?
+</div>
+<div class="flex">
+  <div>
+    <button mat-stroked-button color="warn" (click)="dismiss(true)">
+      <mat-icon>done</mat-icon>
+    </button>
+    <button mat-raised-button color="primary" (click)="dismiss(false)">
+      <mat-icon>cancel</mat-icon>
+    </button>
+  </div>
+</div>

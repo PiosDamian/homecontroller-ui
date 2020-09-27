@@ -2,7 +2,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { untilDestroyed } from '@orchestrator/ngx-until-destroyed';
-import { ManipulateSwitcherData } from '../../model/manipulate-switcher-data.model';
+import { ManipulateSwitcherData, SwitcherData } from '../../model/manipulate-switcher-data.model';
 
 @Component({
   selector: 'app-manipulate-switcher',
@@ -12,18 +12,21 @@ import { ManipulateSwitcherData } from '../../model/manipulate-switcher-data.mod
 export class ManipulateSwitcherComponent implements OnInit, OnDestroy {
   form: FormGroup;
 
-  readonly baseSwitcher: ManipulateSwitcherData;
+  readonly baseSwitcher: SwitcherData;
+  readonly title: string;
 
   constructor(
     private dialogRef: MatDialogRef<ManipulateSwitcherComponent>,
     private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) data?: ManipulateSwitcherData
   ) {
-    if (data) {
-      this.baseSwitcher = data;
+    if (data.pin) {
+      this.baseSwitcher = data.pin;
     } else {
       this.baseSwitcher = {} as any;
     }
+
+    this.title = data.title || '';
   }
 
   ngOnInit(): void {
