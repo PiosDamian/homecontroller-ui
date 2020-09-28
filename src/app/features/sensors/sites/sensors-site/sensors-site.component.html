@@ -5,4 +5,5 @@
     </div>
   </div>
 </mat-toolbar>
-<app-sensors-list [sensors]="sensorsService.sensors | async" [canEdit]="canEdit"></app-sensors-list>
+<app-sensors-list [sensors]="sensorsService.sensors | async" [canEdit]="canEdit"
+  (updateSensor)="sensorsService.updateSensor($event)"></app-sensors-list>

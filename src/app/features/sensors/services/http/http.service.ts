@@ -14,6 +14,6 @@ export class HttpService {
   }
 
   updateSensor(newSensor: BaseSensor): Observable<Sensor> {
-    return this.http.post<Sensor>(endpoints.updateSensor, newSensor);
+    return this.http.put<Sensor>(endpoints.updateSensor.replace('${address}', newSensor.address), newSensor);
   }
 }

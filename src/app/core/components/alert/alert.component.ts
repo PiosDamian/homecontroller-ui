@@ -5,7 +5,7 @@ import { Alert } from '../../model/alert.model';
 @Component({
   selector: 'app-alert',
   templateUrl: './alert.component.html',
-  styleUrls: ['./alert.component.css']
+  styleUrls: ['./alert.component.scss']
 })
 export class AlertComponent {
   constructor(@Inject(MAT_SNACK_BAR_DATA) @Optional() public data: Alert, private snackBarRef: MatSnackBarRef<AlertComponent>) {}
