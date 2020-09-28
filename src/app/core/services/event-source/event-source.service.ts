@@ -11,6 +11,7 @@ export class EventSourceService {
   private id: string;
   private eventSource: EventSource;
   private events$ = new Subject<PushMessage>();
+  private unsubscribeSource = true;
 
   constructor(
     private http: HttpService,
@@ -30,6 +31,7 @@ export class EventSourceService {
           this.ngZone.run(() => {
             this.communication.error(`Problem z kanałem notyfikacji`, 8000);
             this.events$.error(error);
+            this.unsubscribeSource = false;
           });
         };
         this.eventSource.onmessage = (event: MessageEvent) => {
@@ -49,7 +51,9 @@ export class EventSourceService {
   }
 
   private onClose(event: BeforeUnloadEvent) {
-    this.http.unregisterEventsObservable(this.id);
+    if (this.unsubscribeSource) {
+      this.http.unregisterEventsObservable(this.id);
+    }
   }
 }
 

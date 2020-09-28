@@ -12,6 +12,12 @@ import { ManipulateSwitcherComponent } from '../manipulate-switcher/manipulate-s
   styleUrls: ['./switchers-list.component.scss', '../host-styles.scss']
 })
 export class SwitchersListComponent {
+  private static readonly allPins = (() => {
+    const arr = Array.from(Array(32).keys());
+    arr.splice(7, 1);
+    return arr;
+  })();
+
   @Input()
   switchers: Switcher[];
 
@@ -34,7 +40,7 @@ export class SwitchersListComponent {
       .open(ManipulateSwitcherComponent, {
         data: {
           pin: {
-            allPins: Array.from(Array(32).keys())
+            allPins: SwitchersListComponent.allPins
           },
           title: 'Create pin'
         } as ManipulateSwitcherData
@@ -55,7 +61,7 @@ export class SwitchersListComponent {
             address,
             name,
             listenerAddress,
-            allPins: Array.from(Array(32).keys())
+            allPins: SwitchersListComponent.allPins
           },
           title: 'Edit pin'
         } as ManipulateSwitcherData

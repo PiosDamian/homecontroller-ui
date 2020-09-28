@@ -3,6 +3,6 @@
     (stateChanged)="stateChanged.next($event)" (edit)="editSwitcher($event)" (remove)="remove.next($event)">
   </app-switcher>
 </mat-list>
-<button *ngIf="canEdit" mat-fab color="primary" (click)="createSwitcher()">
+<button *ngIf="canEdit" mat-icon-button color="primary" (click)="createSwitcher()">
   <mat-icon>add</mat-icon>
 </button>

@@ -1,1 +1,8 @@
-<p>{{sensorsService.sensors | async | json}}</p>
+<mat-toolbar color="primary">
+  <div class="flex">
+    <div class="title">
+      Sensors
+    </div>
+  </div>
+</mat-toolbar>
+<app-sensors-list [sensors]="sensorsService.sensors | async" [canEdit]="canEdit"></app-sensors-list>

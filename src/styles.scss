@@ -15,4 +15,8 @@ body {
 
 .flex {
   display: flex;
+
+  & .title {
+    align-self: center;
+  }
 }

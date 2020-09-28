@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { CAN_EDIT_SENSORS } from '../../constants/injections-tokens';
 import { SensorService } from '../../services/sensor/sensor.service';
 
 @Component({
@@ -7,7 +8,7 @@ import { SensorService } from '../../services/sensor/sensor.service';
   styleUrls: ['./sensors-site.component.scss']
 })
 export class SensorsSiteComponent implements OnInit {
-  constructor(public sensorsService: SensorService) {}
+  constructor(public sensorsService: SensorService, @Inject(CAN_EDIT_SENSORS) public canEdit: boolean) {}
 
   ngOnInit(): void {}
 }
