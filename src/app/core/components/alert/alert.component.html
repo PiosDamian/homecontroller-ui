@@ -1,4 +1,6 @@
-<div *ngIf="data">
-  <mat-icon [ngClass]="data.type">{{data.type}}</mat-icon>
-  <span class="message">{{data.message}}</span>
+<div *ngIf="data" class="flex">
+  <div>
+    <mat-icon [ngClass]="data.type">{{data.type}}</mat-icon>
+  </div>
+  <div class="message">{{data.message}}</div>
 </div>
