@@ -1,4 +1,4 @@
 export const endpoints = {
-  sensors: `sensors`,
+  sensors: `gateway/sensors`,
   updateSensor: `sensor/{address}`
 };

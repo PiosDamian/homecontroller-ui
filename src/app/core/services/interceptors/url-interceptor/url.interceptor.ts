@@ -9,7 +9,7 @@ export class UrlInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return next.handle(
       request.clone({
-        url: `/gateway${request.url.startsWith('/') ? '' : '/'}${request.url}`
+        url: `/gateway${request.url.startsWith('/') ? '' : '/'}${request.url}`.replace(/(gateway\/){2,}/, 'gateway/')
       })
     );
   }

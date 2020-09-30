@@ -1,11 +1,10 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { endpoints } from '../../constants/endpoints';
 
 @Injectable()
 export class HttpService {
-  constructor(private router: Router, private http: HttpClient) {}
+  constructor(private router: Router) {}
 
   getEventsObservable(id: string) {
     return new EventSource(
