@@ -1,8 +1,4 @@
 .flex {
   width: 100%;
   justify-content: space-between;
-
-  & > * {
-    align-self: center;
-  }
 }
