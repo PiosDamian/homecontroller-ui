@@ -1,6 +1,7 @@
 /// <reference lib="webworker" />
 import { EMPTY, from } from 'rxjs';
 import { catchError, delay, tap } from 'rxjs/operators';
+import { SensorUpdateWorkerConfiguration } from './model/configuration.model';
 
 class Updater {
   private started: boolean;
@@ -31,7 +32,7 @@ class Updater {
     };
   }
 
-  setConfiguration(configuration: { [key: string]: any } = {}) {
+  setConfiguration(configuration: SensorUpdateWorkerConfiguration = {} as any) {
     this.refreshDelay = configuration.refreshDelay || this.refreshDelay;
     this.url = configuration.url || '';
   }
@@ -58,6 +59,7 @@ class Updater {
           tap(response => postMessage(this.buildResponse(true, response), null)),
           catchError(error => {
             postMessage(this.buildResponse(false, error.message), null);
+            this.started = false;
             return EMPTY;
           }),
           delay(this.refreshDelay)
