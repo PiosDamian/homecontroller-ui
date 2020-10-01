@@ -56,6 +56,7 @@ export class SensorService implements OnDestroy {
           oldSensor.name = sensor.name;
           oldSensor.units = sensor.units;
           oldSensor.value = sensor.value;
+          oldSensor.equationConst = sensor.equationConst;
         })
       )
       .subscribe();
@@ -110,12 +111,7 @@ export class SensorService implements OnDestroy {
             throw Error(message.response);
           }
         }),
-        tap((sensors: Sensor[]) =>
-          this.ngZone.run(() => {
-            console.log(sensors);
-            this.storeSensors(sensors);
-          })
-        ),
+        tap((sensors: Sensor[]) => this.ngZone.run(() => this.storeSensors(sensors))),
         catchError(error =>
           this.ngZone.run(() => {
             this.communicationService.error(`Error during refreshing sensors: ${error.message}`);
