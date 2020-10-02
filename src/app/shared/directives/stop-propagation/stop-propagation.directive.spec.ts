@@ -1,8 +1,8 @@
-import { TopPropagationDirective } from './stop-propagation.directive';
+import { StopPropagationDirective } from './stop-propagation.directive';
 
-describe('TopPropagationDirective', () => {
+describe('StopPropagationDirective', () => {
   it('should create an instance', () => {
-    const directive = new TopPropagationDirective();
+    const directive = new StopPropagationDirective();
     expect(directive).toBeTruthy();
   });
 });

@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { MatSnackBarRef, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
+import { MaterialModule } from 'src/app/shared/material.module';
 import { AlertComponent } from './alert.component';
 
 describe('AlertComponent', () => {
@@ -8,9 +9,21 @@ describe('AlertComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AlertComponent ]
-    })
-    .compileComponents();
+      declarations: [AlertComponent],
+      imports: [MaterialModule],
+      providers: [
+        {
+          provide: MatSnackBarRef,
+          useValue: {
+            dismiss: result => {}
+          }
+        },
+        {
+          provide: MAT_SNACK_BAR_DATA,
+          useValue: {}
+        }
+      ]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

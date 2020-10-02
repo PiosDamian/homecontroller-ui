@@ -1,5 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { MaterialModule } from 'src/app/shared/material.module';
+import { EditSensorComponent } from '../edit-sensor/edit-sensor.component';
+import { SensorComponent } from '../sensor/sensor.component';
 import { SensorsListComponent } from './sensors-list.component';
 
 describe('SensorsListComponent', () => {
@@ -8,9 +10,9 @@ describe('SensorsListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SensorsListComponent ]
-    })
-    .compileComponents();
+      declarations: [SensorsListComponent, SensorComponent, EditSensorComponent],
+      imports: [MaterialModule]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
