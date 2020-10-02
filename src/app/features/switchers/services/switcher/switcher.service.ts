@@ -1,7 +1,7 @@
 import { Inject, Injectable, OnDestroy } from '@angular/core';
 import { untilDestroyed } from '@orchestrator/ngx-until-destroyed';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { first, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { catchError, first, tap } from 'rxjs/operators';
 import { SWITCHERS_STATE_CHANGES } from '../../constants/injections-tokens';
 import { StateUpdate } from '../../model/request/state-update.model';
 import { Switcher } from '../../model/response/switcher.model';
@@ -9,13 +9,17 @@ import { HttpService } from '../http/http.service';
 
 @Injectable()
 export class SwitcherService implements OnDestroy {
+  private reservedPinsRead = false;
   private readonly switchersMap = new Map<string, Switcher>();
 
   private switchers$ = new BehaviorSubject<Switcher[]>([]);
 
+  private _reservedPins = new Set<number>();
+
   constructor(private httpService: HttpService, @Inject(SWITCHERS_STATE_CHANGES) switchersStateChanges: Observable<StateUpdate>) {
     this.refresh();
     switchersStateChanges.pipe(untilDestroyed(this)).subscribe(newState => this.updateState(newState));
+    this.getReservedPins();
   }
 
   refresh() {
@@ -30,6 +34,10 @@ export class SwitcherService implements OnDestroy {
 
   get switchers() {
     return this.switchers$.asObservable();
+  }
+
+  get reservedPins(): number[] {
+    return [...this._reservedPins];
   }
 
   blink(switcher: Switcher) {
@@ -55,6 +63,22 @@ export class SwitcherService implements OnDestroy {
       tap(() => this.switchersMap.delete(switcher.address)),
       tap(() => this.switchers$.next([...this.switchersMap.values()]))
     );
+  }
+
+  private getReservedPins() {
+    if (!this.reservedPinsRead) {
+      this.reservedPinsRead = true;
+      this.httpService
+        .reservedPins()
+        .pipe(
+          tap(pins => pins.forEach(pin => this._reservedPins.add(pin))),
+          catchError(error => {
+            this.reservedPinsRead = false;
+            return throwError(error);
+          })
+        )
+        .subscribe();
+    }
   }
 
   private updateState(newState: StateUpdate) {

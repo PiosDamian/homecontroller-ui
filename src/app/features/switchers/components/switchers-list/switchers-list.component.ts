@@ -24,6 +24,9 @@ export class SwitchersListComponent {
   @Input()
   canEdit = false;
 
+  @Input()
+  reservedPins: number[];
+
   @Output()
   switcherUpdated = new EventEmitter<StateChange>();
 

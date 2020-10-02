@@ -2,7 +2,7 @@ import { Component, Inject, OnDestroy } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { untilDestroyed } from '@orchestrator/ngx-until-destroyed';
 import { Observable } from 'rxjs';
-import { filter, first } from 'rxjs/operators';
+import { filter, first, switchMap } from 'rxjs/operators';
 import { DeleteSwitcherComponent } from '../../components/delete-switcher/delete-switcher.component';
 import { CAN_EDIT_SWITCHER } from '../../constants/injections-tokens';
 import { Switcher } from '../../model/response/switcher.model';
@@ -36,8 +36,13 @@ export class SwitchersSiteComponent implements OnDestroy {
     this.matBottomSheet
       .open(DeleteSwitcherComponent)
       .afterDismissed()
-      .pipe(untilDestroyed(this), first(), filter(Boolean))
-      .subscribe(() => this.switchersService.deleteSwitcher(switcher).subscribe());
+      .pipe(
+        untilDestroyed(this),
+        first(),
+        filter(Boolean),
+        switchMap(() => this.switchersService.deleteSwitcher(switcher))
+      )
+      .subscribe();
   }
 
   ngOnDestroy() {}

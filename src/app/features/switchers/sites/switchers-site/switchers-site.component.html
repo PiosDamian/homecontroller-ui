@@ -9,5 +9,6 @@
   </div>
 </mat-toolbar>
 <app-switchers-list [switchers]="switchersService.switchers | async" [canEdit]="canEdit | async"
-  (switcherUpdated)="onNewSwitcher($event)" (stateChanged)="onTouch($event)" (remove)="deleteSwitcher($event)">
+  [reservedPins]="switchersService.reservedPins" (switcherUpdated)="onNewSwitcher($event)"
+  (stateChanged)="onTouch($event)" (remove)="deleteSwitcher($event)">
 </app-switchers-list>

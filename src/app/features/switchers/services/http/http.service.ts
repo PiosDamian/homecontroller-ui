@@ -28,4 +28,8 @@ export class HttpService {
   deleteSwitcher(switcher: Switcher): Observable<void> {
     return this.http.delete(endpoints.switcher.replace('${address}', switcher.address)).pipe(map(() => null));
   }
+
+  reservedPins(): Observable<number[]> {
+    return this.http.get<number[]>(endpoints.reservedPins);
+  }
 }

@@ -1,9 +1,10 @@
 export const endpoints = {
-  switchers: `switchers`,
+  switchers: 'switchers',
   switch: 'switch/${address}',
   switcher: 'switcher/${address}',
-  createSwitcher: `switcher/add`,
-  updateSwitcher: `switcher/update`,
-  registerListener: `listener/register`,
-  unregisterListener: `listener/unregister`
+  createSwitcher: 'switcher/add',
+  updateSwitcher: 'switcher/update',
+  registerListener: 'listener/register',
+  unregisterListener: 'listener/unregister',
+  reservedPins: 'reservedPins'
 };
