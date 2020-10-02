@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { MaterialModule } from 'src/app/shared/material.module';
 import { SwitchersListComponent } from './switchers-list.component';
 
 describe('SwitchersListComponent', () => {
@@ -8,9 +8,9 @@ describe('SwitchersListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SwitchersListComponent ]
-    })
-    .compileComponents();
+      declarations: [SwitchersListComponent],
+      imports: [MaterialModule]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

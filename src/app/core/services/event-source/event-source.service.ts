@@ -1,9 +1,9 @@
 import { Inject, Injectable, NgZone } from '@angular/core';
 import { Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { CommunicationService } from 'src/app/core/services/communication/communication.service';
-import { v4 as uuid } from 'uuid';
+import { V4 as uuid } from 'uuid';
 import { USE_EVENT_SOURCE } from '../../core-injection-tokens.module';
+import { CommunicationService } from '../communication/communication.service';
 import { HttpService } from '../http/http.service';
 
 @Injectable()
@@ -34,9 +34,7 @@ export class EventSourceService {
             this.unsubscribeSource = false;
           });
         };
-        this.eventSource.onmessage = (event: MessageEvent) => {
-          this.ngZone.run(() => this.events$.next(JSON.parse(event.data)));
-        };
+        this.eventSource.onmessage = (event: MessageEvent) => this.ngZone.run(() => this.events$.next(JSON.parse(event.data)));
       }
       res();
     });

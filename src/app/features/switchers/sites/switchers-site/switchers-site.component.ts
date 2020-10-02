@@ -1,7 +1,7 @@
-import { Component, Inject, OnDestroy } from '@angular/core';
+import { Component, Inject, OnDestroy, Optional } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { untilDestroyed } from '@orchestrator/ngx-until-destroyed';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { filter, first, switchMap } from 'rxjs/operators';
 import { DeleteSwitcherComponent } from '../../components/delete-switcher/delete-switcher.component';
 import { CAN_EDIT_SWITCHER } from '../../constants/injections-tokens';
@@ -17,7 +17,7 @@ export class SwitchersSiteComponent implements OnDestroy {
   constructor(
     public switchersService: SwitcherService,
     private matBottomSheet: MatBottomSheet,
-    @Inject(CAN_EDIT_SWITCHER) public canEdit: Observable<boolean>
+    @Inject(CAN_EDIT_SWITCHER) @Optional() public canEdit: Observable<boolean> = of(false)
   ) {}
 
   onNewSwitcher({ switcher, isNew }) {
