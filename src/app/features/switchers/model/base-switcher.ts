@@ -1,5 +1,5 @@
 export interface BaseSwitcher {
   name?: string;
-  address?: string;
-  listenerAddress?: string;
+  address?: number;
+  listenerAddress?: number;
 }

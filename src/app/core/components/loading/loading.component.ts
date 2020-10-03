@@ -1,5 +1,4 @@
-import { Component, Inject, Optional } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-loading',
@@ -7,5 +6,5 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./loading.component.css']
 })
 export class LoadingComponent {
-  constructor(@Inject(MAT_DIALOG_DATA) @Optional() public data: string) {}
+  constructor() {}
 }

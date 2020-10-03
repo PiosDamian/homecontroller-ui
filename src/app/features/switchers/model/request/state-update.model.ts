@@ -1,6 +1,6 @@
 import { SwitcherState } from '../response/switcher-state.enum';
 
 export interface StateUpdate {
-  address: string;
+  address: number;
   state: SwitcherState;
 }

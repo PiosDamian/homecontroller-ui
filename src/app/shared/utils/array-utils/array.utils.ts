@@ -1,6 +1,5 @@
-import { remove } from 'lodash';
+import { isEqual } from 'lodash';
 
 export function removeElementsOfArray<T>(array: T[], elementsToRemove: T[]): T[] {
-  elementsToRemove.forEach(element => remove(array, e => e === element));
-  return array;
+  return array.filter(e => !elementsToRemove.some(r => isEqual(e, r)));
 }

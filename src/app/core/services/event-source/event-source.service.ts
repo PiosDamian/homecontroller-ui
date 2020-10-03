@@ -1,7 +1,7 @@
 import { Inject, Injectable, NgZone } from '@angular/core';
 import { Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { V4 as uuid } from 'uuid';
+import { v4 as uuid } from 'uuid';
 import { USE_EVENT_SOURCE } from '../../core-injection-tokens.module';
 import { CommunicationService } from '../communication/communication.service';
 import { HttpService } from '../http/http.service';

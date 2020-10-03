@@ -3,4 +3,5 @@ export interface BaseSensor {
   name: string;
   units: string;
   factor: number;
+  equationConst: number;
 }

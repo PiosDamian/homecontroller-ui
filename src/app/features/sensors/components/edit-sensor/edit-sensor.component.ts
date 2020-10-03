@@ -22,7 +22,8 @@ export class EditSensorComponent implements OnInit {
       name: new FormControl(this.data.name),
       units: new FormControl(this.data.units),
       factor: new FormControl(this.data.factor),
-      address: new FormControl(this.data.address)
+      address: new FormControl(this.data.address),
+      equationConst: new FormControl(this.data.equationConst)
     });
   }
 }
