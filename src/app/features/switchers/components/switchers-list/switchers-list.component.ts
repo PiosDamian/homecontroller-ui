@@ -43,7 +43,8 @@ export class SwitchersListComponent {
       .open(ManipulateSwitcherComponent, {
         data: {
           pin: {
-            allPins: SwitchersListComponent.allPins
+            allPins: SwitchersListComponent.allPins,
+            reservedPins: this.reservedPins
           },
           title: 'Create pin'
         } as ManipulateSwitcherData
@@ -64,7 +65,8 @@ export class SwitchersListComponent {
             address,
             name,
             listenerAddress,
-            allPins: SwitchersListComponent.allPins
+            allPins: SwitchersListComponent.allPins,
+            reservedPins: this.reservedPins
           },
           title: 'Edit pin'
         } as ManipulateSwitcherData

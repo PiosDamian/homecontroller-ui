@@ -8,6 +8,6 @@ export interface ManipulateSwitcherData {
 }
 
 export interface PinsInfo {
-  availablePins?: number[];
+  reservedPins?: number[];
   allPins: number[];
 }

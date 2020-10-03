@@ -10,7 +10,7 @@ import { HttpService } from '../http/http.service';
 @Injectable()
 export class SwitcherService implements OnDestroy {
   private reservedPinsRead = false;
-  private readonly switchersMap = new Map<string, Switcher>();
+  private readonly switchersMap = new Map<number, Switcher>();
 
   private switchers$ = new BehaviorSubject<Switcher[]>([]);
 
@@ -47,12 +47,25 @@ export class SwitcherService implements OnDestroy {
   createSwitcher(newSwitcher: Switcher) {
     return this.httpService.createSwitcher(newSwitcher).pipe(
       tap(() => this.switchersMap.set(newSwitcher.address, newSwitcher)),
-      tap(() => this.switchers$.next([...this.switchers$.getValue(), newSwitcher]))
+      tap(() => this.switchers$.next([...this.switchers$.getValue(), newSwitcher])),
+      tap(() => {
+        this._reservedPins.add(newSwitcher.address);
+        if (newSwitcher.listenerAddress) {
+          this._reservedPins.add(newSwitcher.listenerAddress);
+        }
+      })
     );
   }
 
   updateSwitcher(updateSwitcher: Switcher) {
     return this.httpService.updateSwitcher(updateSwitcher).pipe(
+      tap(() => {
+        const currentSwitcher = this.switchersMap.get(updateSwitcher.address);
+        if (currentSwitcher.listenerAddress && currentSwitcher.listenerAddress !== updateSwitcher.listenerAddress) {
+          this._reservedPins.delete(currentSwitcher.listenerAddress);
+          this._reservedPins.add(updateSwitcher.listenerAddress);
+        }
+      }),
       tap(() => this.switchersMap.set(updateSwitcher.address, updateSwitcher)),
       tap(() => this.switchers$.next([...this.switchersMap.values()]))
     );
@@ -60,6 +73,13 @@ export class SwitcherService implements OnDestroy {
 
   deleteSwitcher(switcher: Switcher) {
     return this.httpService.deleteSwitcher(switcher).pipe(
+      tap(() => {
+        const currentSwitcher = this.switchersMap.get(switcher.address);
+        this._reservedPins.delete(switcher.address);
+        if (currentSwitcher.listenerAddress) {
+          this._reservedPins.delete(currentSwitcher.listenerAddress);
+        }
+      }),
       tap(() => this.switchersMap.delete(switcher.address)),
       tap(() => this.switchers$.next([...this.switchersMap.values()]))
     );
