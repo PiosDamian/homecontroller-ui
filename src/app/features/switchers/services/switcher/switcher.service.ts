@@ -16,9 +16,15 @@ export class SwitcherService implements OnDestroy {
 
   private _reservedPins = new Set<number>();
 
-  constructor(private httpService: HttpService, @Inject(SWITCHERS_STATE_CHANGES) switchersStateChanges: Observable<StateUpdate>) {
+  constructor(
+    private readonly httpService: HttpService,
+    @Inject(SWITCHERS_STATE_CHANGES)
+    switchersStateChanges: Observable<StateUpdate>
+  ) {
     this.refresh();
-    switchersStateChanges.pipe(untilDestroyed(this)).subscribe(newState => this.updateState(newState));
+    switchersStateChanges
+      .pipe(untilDestroyed(this))
+      .subscribe((newState) => this.updateState(newState));
     this.getReservedPins();
   }
 
@@ -27,9 +33,13 @@ export class SwitcherService implements OnDestroy {
       .getSwitchers()
       .pipe(
         first(),
-        tap(switchers => switchers.forEach(switcher => this.switchersMap.set(switcher.address, switcher)))
+        tap((switchers) =>
+          switchers.forEach((switcher) =>
+            this.switchersMap.set(switcher.address, switcher)
+          )
+        )
       )
-      .subscribe(switchers => this.switchers$.next(switchers));
+      .subscribe((switchers) => this.switchers$.next(switchers));
   }
 
   get switchers() {
@@ -47,7 +57,9 @@ export class SwitcherService implements OnDestroy {
   createSwitcher(newSwitcher: Switcher) {
     return this.httpService.createSwitcher(newSwitcher).pipe(
       tap(() => this.switchersMap.set(newSwitcher.address, newSwitcher)),
-      tap(() => this.switchers$.next([...this.switchers$.getValue(), newSwitcher])),
+      tap(() =>
+        this.switchers$.next([...this.switchers$.getValue(), newSwitcher])
+      ),
       tap(() => {
         this._reservedPins.add(newSwitcher.address);
         if (newSwitcher.listenerAddress) {
@@ -61,7 +73,10 @@ export class SwitcherService implements OnDestroy {
     return this.httpService.updateSwitcher(updateSwitcher).pipe(
       tap(() => {
         const currentSwitcher = this.switchersMap.get(updateSwitcher.address);
-        if (currentSwitcher.listenerAddress && currentSwitcher.listenerAddress !== updateSwitcher.listenerAddress) {
+        if (
+          currentSwitcher.listenerAddress &&
+          currentSwitcher.listenerAddress !== updateSwitcher.listenerAddress
+        ) {
           this._reservedPins.delete(currentSwitcher.listenerAddress);
           this._reservedPins.add(updateSwitcher.listenerAddress);
         }
@@ -91,8 +106,8 @@ export class SwitcherService implements OnDestroy {
       this.httpService
         .reservedPins()
         .pipe(
-          tap(pins => pins.forEach(pin => this._reservedPins.add(pin))),
-          catchError(error => {
+          tap((pins) => pins.forEach((pin) => this._reservedPins.add(pin))),
+          catchError((error) => {
             this.reservedPinsRead = false;
             return throwError(error);
           })
