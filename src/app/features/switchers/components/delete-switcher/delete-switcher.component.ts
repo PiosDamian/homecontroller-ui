@@ -1,5 +1,8 @@
 import { Component, Inject } from '@angular/core';
-import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
+import {
+  MatBottomSheetRef,
+  MAT_BOTTOM_SHEET_DATA
+} from '@angular/material/bottom-sheet';
 
 @Component({
   selector: 'app-delete-switcher',
@@ -8,8 +11,12 @@ import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bott
 })
 export class DeleteSwitcherComponent {
   constructor(
-    private dialogRef: MatBottomSheetRef<DeleteSwitcherComponent, boolean>,
-    @Inject(MAT_BOTTOM_SHEET_DATA) public data?: { pinNumber?: number; name?: string }
+    private readonly dialogRef: MatBottomSheetRef<
+      DeleteSwitcherComponent,
+      boolean
+    >,
+    @Inject(MAT_BOTTOM_SHEET_DATA)
+    readonly data?: { pinNumber?: number; name?: string }
   ) {}
 
   dismiss(result: boolean) {

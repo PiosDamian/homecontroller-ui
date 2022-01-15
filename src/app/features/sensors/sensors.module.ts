@@ -7,13 +7,23 @@ import { EditSensorComponent } from './components/edit-sensor/edit-sensor.compon
 import { SensorComponent } from './components/sensor/sensor.component';
 import { SensorsListComponent } from './components/sensors-list/sensors-list.component';
 import { SensorsRoutingModule } from './sensors-routing.module';
-import { HttpService } from './services/http/http.service';
-import { SensorService } from './services/sensor/sensor.service';
 import { SensorsSiteComponent } from './sites/sensors-site/sensors-site.component';
+import { SharedDirectivesModule } from '../../shared/directives/shared-directives.module';
 
 @NgModule({
-  providers: [HttpService, SensorService],
-  declarations: [SensorsSiteComponent, SensorsListComponent, SensorComponent, EditSensorComponent],
-  imports: [CommonModule, SensorsRoutingModule, MaterialModule, ReactiveFormsModule, SharedPipesModule]
+  declarations: [
+    SensorsSiteComponent,
+    SensorsListComponent,
+    SensorComponent,
+    EditSensorComponent
+  ],
+  imports: [
+    CommonModule,
+    SensorsRoutingModule,
+    MaterialModule,
+    ReactiveFormsModule,
+    SharedPipesModule,
+    SharedDirectivesModule
+  ]
 })
 export class SensorsModule {}

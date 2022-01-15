@@ -1,14 +1,14 @@
-<mat-toolbar color="primary">
-  <div class="flex">
-    <div class="title">
-      Sensors
-    </div>
-    <div *ngIf="sensorsService.error">
-      <button mat-icon-button (click)="sensorsService.refresh()">
-        <mat-icon>sync</mat-icon>
-      </button>
-    </div>
-  </div>
-</mat-toolbar>
-<app-sensors-list [sensors]="sensorsService.sensors | async" [canEdit]="canEdit"
+<!--<mat-toolbar color="primary">-->
+<!--  <div class="flex">-->
+<!--    <div class="title">-->
+<!--      Sensors-->
+<!--    </div>-->
+<!--    <div *ngIf="sensorsService.error">-->
+<!--      <button mat-icon-button (click)="sensorsService.refresh()">-->
+<!--        <mat-icon>sync</mat-icon>-->
+<!--      </button>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</mat-toolbar>-->
+<app-sensors-list [sensors]="sensorsService.sensors | async" [canEdit]="canEdit$ | async"
   (updateSensor)="sensorsService.updateSensor($event)"></app-sensors-list>

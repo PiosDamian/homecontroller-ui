@@ -7,14 +7,14 @@ import { StateUpdate } from '../../model/request/state-update.model';
 import { Switcher } from '../../model/response/switcher.model';
 import { HttpService } from '../http/http.service';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class SwitcherService implements OnDestroy {
   private reservedPinsRead = false;
   private readonly switchersMap = new Map<number, Switcher>();
 
-  private switchers$ = new BehaviorSubject<Switcher[]>([]);
+  private readonly switchers$ = new BehaviorSubject<Switcher[]>([]);
 
-  private _reservedPins = new Set<number>();
+  private readonly _reservedPins = new Set<number>();
 
   constructor(
     private readonly httpService: HttpService,

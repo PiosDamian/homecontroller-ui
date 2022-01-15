@@ -11,13 +11,18 @@ import { SwitcherService } from '../../services/switcher/switcher.service';
 @Component({
   selector: 'app-switchers-site',
   templateUrl: './switchers-site.component.html',
-  styleUrls: ['./switchers-site.component.scss', '../../components/host-styles.scss']
+  styleUrls: [
+    './switchers-site.component.scss',
+    '../../components/host-styles.scss'
+  ]
 })
 export class SwitchersSiteComponent implements OnDestroy {
   constructor(
-    public switchersService: SwitcherService,
+    readonly switchersService: SwitcherService,
     private matBottomSheet: MatBottomSheet,
-    @Inject(CAN_EDIT_SWITCHER) @Optional() public canEdit: Observable<boolean> = of(false)
+    @Inject(CAN_EDIT_SWITCHER)
+    @Optional()
+    readonly canEdit$: Observable<boolean> = of(false)
   ) {}
 
   onNewSwitcher({ switcher, isNew }) {

@@ -1,11 +1,19 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators
+} from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { untilDestroyed } from '@orchestrator/ngx-until-destroyed';
 import { sortBy } from 'lodash';
 import { filter } from 'rxjs/operators';
 import { removeElementsOfArray } from 'src/app/shared/utils/array-utils/array.utils';
-import { ManipulateSwitcherData, SwitcherData } from '../../model/manipulate-switcher-data.model';
+import {
+  ManipulateSwitcherData,
+  SwitcherData
+} from '../../model/manipulate-switcher-data.model';
 
 @Component({
   selector: 'app-manipulate-switcher',
@@ -40,8 +48,8 @@ export class ManipulateSwitcherComponent implements OnInit, OnDestroy {
   }
 
   constructor(
-    private dialogRef: MatDialogRef<ManipulateSwitcherComponent>,
-    private fb: FormBuilder,
+    private readonly dialogRef: MatDialogRef<ManipulateSwitcherComponent>,
+    private readonly fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) data?: ManipulateSwitcherData
   ) {
     if (data.pin) {
@@ -76,7 +84,10 @@ export class ManipulateSwitcherComponent implements OnInit, OnDestroy {
   }
 
   private setPins() {
-    const pins = removeElementsOfArray(this.baseSwitcher.allPins, this.baseSwitcher.reservedPins || []);
+    const pins = removeElementsOfArray(
+      this.baseSwitcher.allPins,
+      this.baseSwitcher.reservedPins || []
+    );
     this.availableListenerPins = [...pins];
     this.availableSwitcherPins = [...pins];
     this.allAvailablePins = [...pins];
@@ -93,7 +104,9 @@ export class ManipulateSwitcherComponent implements OnInit, OnDestroy {
   private createForm() {
     this.form = this.fb.group({
       name: new FormControl(this.baseSwitcher.name, [Validators.required]),
-      address: new FormControl(this.baseSwitcher.address, [Validators.required]),
+      address: new FormControl(this.baseSwitcher.address, [
+        Validators.required
+      ]),
       listenerAddress: new FormControl(this.baseSwitcher.listenerAddress),
       force: new FormControl(false)
     });
@@ -121,9 +134,15 @@ export class ManipulateSwitcherComponent implements OnInit, OnDestroy {
       .get('address')
       .valueChanges.pipe(
         untilDestroyed(this),
-        filter(val => val != null)
+        filter((val) => val != null)
       )
-      .subscribe((value: number) => (this.availableListenerPins = removeElementsOfArray(this.allAvailablePins, [value])));
+      .subscribe(
+        (value: number) =>
+          (this.availableListenerPins = removeElementsOfArray(
+            this.allAvailablePins,
+            [value]
+          ))
+      );
   }
 
   private listenListenerAddress() {
@@ -131,10 +150,13 @@ export class ManipulateSwitcherComponent implements OnInit, OnDestroy {
       .get('listenerAddress')
       .valueChanges.pipe(
         untilDestroyed(this),
-        filter(val => val != null)
+        filter((val) => val != null)
       )
       .subscribe((value: number) => {
-        this.availableSwitcherPins = removeElementsOfArray(this.allAvailablePins, [value]);
+        this.availableSwitcherPins = removeElementsOfArray(
+          this.allAvailablePins,
+          [value]
+        );
       });
   }
 

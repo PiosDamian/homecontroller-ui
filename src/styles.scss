@@ -21,4 +21,8 @@ body {
   & > * {
     align-self: center;
   }
+
+  &.right {
+    justify-content: flex-end;
+  }
 }

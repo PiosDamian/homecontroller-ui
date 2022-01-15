@@ -1,11 +1,15 @@
 <mat-sidenav-container>
   <mat-sidenav-content>
-    <mat-button-toggle-group class="margin-5-10">
-      <mat-button-toggle mat-button [routerLink]="['switchers']" routerLinkActive="mat-button-toggle-checked">Switchers
-      </mat-button-toggle>
-      <mat-button-toggle mat-button [routerLink]="['sensors']" routerLinkActive="mat-button-toggle-checked">Sensors
-      </mat-button-toggle>
-    </mat-button-toggle-group>
+    <mat-toolbar color='primary'>
+      <mat-button-toggle-group class='margin-5-10'>
+        <mat-button-toggle mat-button [routerLink]="['switchers']" routerLinkActive='mat-button-toggle-checked'>Switchers
+        </mat-button-toggle>
+        <mat-button-toggle mat-button [routerLink]="['sensors']" routerLinkActive='mat-button-toggle-checked'>Sensors
+        </mat-button-toggle>
+        <mat-button-toggle mat-button [routerLink]="['schedule']" routerLinkActive='mat-button-toggle-checked'>Schedule
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </mat-toolbar>
   </mat-sidenav-content>
 </mat-sidenav-container>
 <router-outlet></router-outlet>

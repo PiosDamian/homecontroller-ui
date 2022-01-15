@@ -3,18 +3,20 @@ import { untilDestroyed } from '@orchestrator/ngx-until-destroyed';
 import { BehaviorSubject, EMPTY, fromEvent, of } from 'rxjs';
 import { catchError, delay, first, map, pluck, tap } from 'rxjs/operators';
 import { CommunicationService } from 'src/app/core/services/communication/communication.service';
-import { Sensor } from '../../../sensors/model/response/sensor.model';
+import { Sensor } from '../../model/response/sensor.model';
 import { BaseSensor } from '../../model/base-sensor';
 import { SensorUpdateWorkerConfiguration } from '../../web-worker/sensor-update/model/configuration.model';
 import { HttpService } from '../http/http.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SensorService implements OnDestroy {
   private static readonly refreshDelay = 60000;
 
   private sensorsMap = new Map<string, Sensor>();
   private $sensors = new BehaviorSubject<Sensor[]>([]);
-  private worker: Worker;
+  private readonly worker: Worker;
   private refreshStarted: boolean;
   private _error: boolean;
 
@@ -22,12 +24,22 @@ export class SensorService implements OnDestroy {
     return this._error;
   }
 
-  constructor(private httpService: HttpService, private communicationService: CommunicationService, private ngZone: NgZone) {
+  constructor(
+    private httpService: HttpService,
+    private communicationService: CommunicationService,
+    private ngZone: NgZone
+  ) {
     if (typeof Worker !== 'undefined') {
-      this.worker = new Worker('../../web-worker/sensor-update/sensor-update.worker.ts', { type: 'module' });
+      this.worker = new Worker(
+        '../../web-worker/sensor-update/sensor-update.worker.ts',
+        { type: 'module' }
+      );
       this.worker.postMessage({
         command: 'configure',
-        value: { refreshDelay: SensorService.refreshDelay, url: httpService.sensorsUrl } as SensorUpdateWorkerConfiguration
+        value: {
+          refreshDelay: SensorService.refreshDelay,
+          url: httpService.sensorsUrl
+        } as SensorUpdateWorkerConfiguration
       });
     }
   }
@@ -50,7 +62,7 @@ export class SensorService implements OnDestroy {
     this.httpService
       .updateSensor(newSensor)
       .pipe(
-        tap(sensor => {
+        tap((sensor) => {
           const oldSensor = this.sensorsMap.get(sensor.address);
           oldSensor.factor = sensor.factor;
           oldSensor.name = sensor.name;
@@ -78,8 +90,8 @@ export class SensorService implements OnDestroy {
       .getSensors()
       .pipe(
         first(),
-        tap(sensors => this.storeSensors(sensors)),
-        catchError(error => {
+        tap((sensors) => this.storeSensors(sensors)),
+        catchError((_) => {
           this.refreshStarted = false;
           this._error = true;
           return EMPTY;
@@ -94,7 +106,7 @@ export class SensorService implements OnDestroy {
   }
 
   private storeSensors(sensors: Sensor[]): void {
-    sensors.forEach(sensor => this.sensorsMap.set(sensor.address, sensor));
+    sensors.forEach((sensor) => this.sensorsMap.set(sensor.address, sensor));
     this.$sensors.next(sensors);
   }
 
@@ -111,10 +123,14 @@ export class SensorService implements OnDestroy {
             throw Error(message.response);
           }
         }),
-        tap((sensors: Sensor[]) => this.ngZone.run(() => this.storeSensors(sensors))),
-        catchError(error =>
+        tap((sensors: Sensor[]) =>
+          this.ngZone.run(() => this.storeSensors(sensors))
+        ),
+        catchError((error) =>
           this.ngZone.run(() => {
-            this.communicationService.error(`Error during refreshing sensors: ${error.message}`);
+            this.communicationService.error(
+              `Error during refreshing sensors: ${error.message}`
+            );
             this._error = true;
             this.refreshStarted = false;
             return of(null);

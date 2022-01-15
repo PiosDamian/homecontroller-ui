@@ -1,13 +1,14 @@
-import { NgModule } from '@angular/core'
-import { of } from 'rxjs'
-import { pluck } from 'rxjs/operators'
-import { CAN_EDIT_SENSORS } from '../features/sensors/constants/injections-tokens'
+import { NgModule } from '@angular/core';
+import { of } from 'rxjs';
+import { pluck } from 'rxjs/operators';
+import { CAN_EDIT_SENSORS } from '../features/sensors/constants/injections-tokens';
 import {
   CAN_EDIT_SWITCHER,
   SWITCHERS_STATE_CHANGES
-} from '../features/switchers/constants/injections-tokens'
-import { EventSourceService } from './services/event-source/event-source.service'
-import { USE_EVENT_SOURCE } from './injection-tokens'
+} from '../features/switchers/constants/injections-tokens';
+import { EventSourceService } from './services/event-source/event-source.service';
+import { USE_EVENT_SOURCE } from './injection-tokens';
+import { CAN_EDIT_TASKS } from '../features/scheduling/constants/injections-tokens';
 
 @NgModule({
   providers: [
@@ -25,6 +26,10 @@ import { USE_EVENT_SOURCE } from './injection-tokens'
       provide: CAN_EDIT_SWITCHER,
       useValue: of(true),
       multi: false
+    },
+    {
+      provide: CAN_EDIT_TASKS,
+      useValue: of(true)
     },
     {
       provide: SWITCHERS_STATE_CHANGES,

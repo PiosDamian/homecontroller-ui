@@ -4,11 +4,22 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: 'switchers',
-    loadChildren: () => import('./features/switchers/switchers.module').then(m => m.SwitchersModule)
+    loadChildren: () =>
+      import('./features/switchers/switchers.module').then(
+        (m) => m.SwitchersModule
+      )
   },
   {
     path: 'sensors',
-    loadChildren: () => import('./features/sensors/sensors.module').then(m => m.SensorsModule)
+    loadChildren: () =>
+      import('./features/sensors/sensors.module').then((m) => m.SensorsModule)
+  },
+  {
+    path: 'schedule',
+    loadChildren: () =>
+      import('./features/scheduling/scheduling.module').then(
+        (m) => m.SchedulingModule
+      )
   },
   {
     path: '',
@@ -18,7 +29,9 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { useHash: true })],
+  imports: [
+    RouterModule.forRoot(routes, { useHash: true, enableTracing: false })
+  ],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}

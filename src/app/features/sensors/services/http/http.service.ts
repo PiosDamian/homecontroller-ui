@@ -5,7 +5,9 @@ import { endpoints } from '../../constants/endpoints';
 import { BaseSensor } from '../../model/base-sensor';
 import { Sensor } from '../../model/response/sensor.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class HttpService {
   constructor(private http: HttpClient) {}
 
@@ -14,7 +16,10 @@ export class HttpService {
   }
 
   updateSensor(newSensor: BaseSensor): Observable<Sensor> {
-    return this.http.put<Sensor>(endpoints.updateSensor.replace('${address}', newSensor.address), newSensor);
+    return this.http.put<Sensor>(
+      endpoints.updateSensor.replace('${address}', newSensor.address),
+      newSensor
+    );
   }
 
   get sensorsUrl(): string {

@@ -36,7 +36,7 @@ export class SwitchersListComponent {
   @Output()
   remove = new EventEmitter<Switcher>();
 
-  constructor(private matDialog: MatDialog) {}
+  constructor(private readonly matDialog: MatDialog) {}
 
   createSwitcher() {
     this.matDialog
@@ -52,9 +52,11 @@ export class SwitchersListComponent {
       .afterClosed()
       .pipe(
         first(),
-        filter(val => !!val)
+        filter((val) => !!val)
       )
-      .subscribe((switcher: Switcher) => this.switcherUpdated.emit({ switcher, isNew: true }));
+      .subscribe((switcher: Switcher) =>
+        this.switcherUpdated.emit({ switcher, isNew: true })
+      );
   }
 
   editSwitcher({ address, name, listenerAddress }) {
@@ -74,8 +76,10 @@ export class SwitchersListComponent {
       .afterClosed()
       .pipe(
         first(),
-        filter(val => !!val)
+        filter((val) => !!val)
       )
-      .subscribe((switcher: Switcher) => this.switcherUpdated.emit({ switcher, isNew: false }));
+      .subscribe((switcher: Switcher) =>
+        this.switcherUpdated.emit({ switcher, isNew: false })
+      );
   }
 }

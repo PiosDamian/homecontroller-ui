@@ -4,7 +4,7 @@
       <span>{{sensor.name}}</span>: <span>{{sensor.value | toFixed}} {{sensor.units}}</span>
     </div>
     <div *ngIf="canEdit">
-      <button mat-icon-button color="primary" (click)="edit.next(sensor)" stopPropagation>
+      <button mat-icon-button color="primary" (click)="edit.emit(sensor)" stopPropagation>
         <mat-icon>
           edit
         </mat-icon>
