@@ -1,0 +1,47 @@
+<h2 mat-dialog-title>{{title}}</h2>
+<div mat-dialog-content class="content">
+  <div>
+    <form [formGroup]="form" autocomplete="off">
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input type="text" matInput formControlName="name" required>
+        <mat-hint>Name for your switcher</mat-hint>
+        <mat-error *ngIf="form.get('name').hasError('required')">Field is <strong>required</strong></mat-error>
+      </mat-form-field>
+      <mat-form-field *ngIf="!baseSwitcher.address">
+        <mat-label>Pin</mat-label>
+        <mat-select formControlName="address" required>
+          <mat-option *ngFor="let pin of availableSwitcherPins" [value]="pin">
+            {{pin}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('address').hasError('required')">Field is <strong>required</strong></mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Listener pin</mat-label>
+        <mat-select formControlName="listenerAddress">
+          <mat-option *ngFor="let pin of availableListenerPins" [value]="pin">
+            {{pin}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-checkbox formControlName="force" *ngIf="!baseSwitcher.address">Override if pin taken?</mat-checkbox>
+    </form>
+
+    <mat-dialog-actions align="end">
+      <button mat-stroked-button color="accent" (click)="save()" [disabled]="form.invalid">
+        <mat-icon>
+          save
+        </mat-icon>
+      </button>
+      <button mat-stroked-button color="primary" (click)="close()">
+        <mat-icon>
+          close
+        </mat-icon>
+      </button>
+    </mat-dialog-actions>
+  </div>
+  <div mat-dialog-content>
+    <img src="assets/images/pinsConfig.png">
+  </div>
+</div>

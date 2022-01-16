@@ -1,0 +1,11 @@
+<div class='content'>
+  Are you sure you want to delete task {{data?.task.name}}?
+</div>
+<div class='flex'>
+  <button mat-stroked-button color='warn' (click)='dialogRef.dismiss(true)'>
+    <mat-icon>done</mat-icon>
+  </button>
+  <button mat-raised-button color='primary' (click)='dialogRef.dismiss(false)'>
+    <mat-icon>cancel</mat-icon>
+  </button>
+</div>

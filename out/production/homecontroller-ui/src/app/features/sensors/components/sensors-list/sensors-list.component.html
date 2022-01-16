@@ -1,0 +1,4 @@
+<mat-list>
+  <app-sensor *ngFor="let sensor of sensors" [sensor]="sensor" (edit)="editSensor($event)" [canEdit]="canEdit">
+  </app-sensor>
+</mat-list>

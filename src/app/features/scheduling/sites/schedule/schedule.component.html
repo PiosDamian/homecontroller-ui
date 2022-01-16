@@ -1,0 +1,8 @@
+<!--<mat-toolbar color="primary">-->
+<!--  <div class="flex">-->
+<!--    <div class="title">-->
+<!--      Scheduling-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</mat-toolbar>-->
+<app-tasks-list [canEdit]='canEdit$ | async' [tasks]='tasks$ | async' (createTask)='createTask()' (removeTask)='removeTask($event)'></app-tasks-list>

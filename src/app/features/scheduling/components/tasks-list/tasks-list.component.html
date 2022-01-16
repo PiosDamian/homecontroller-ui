@@ -1,0 +1,8 @@
+<mat-list>
+  <app-task-element *ngFor='let task of tasks' [task]='task' [canEdit]='canEdit' (removeTask)='removeTask.emit($event)'></app-task-element>
+</mat-list>
+<div class='flex right margin-5-10'>
+  <button *ngIf='canEdit' mat-icon-button color='primary' (click)='createTask.emit()'>
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
