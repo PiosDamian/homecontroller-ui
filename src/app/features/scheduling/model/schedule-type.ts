@@ -1,4 +1,4 @@
-export const enum ControlType {
+export const enum ScheduleType {
   CRON = 'CRON',
   PERIOD = 'PERIOD'
 }

@@ -43,7 +43,7 @@ export class ScheduleService {
     }
     return this._tasks$.pipe(
       skipWhile((val) => !val),
-      map((tasksMap: Map<string, Task>) =>
+      map((tasksMap: Map<string, Readonly<Task>>) =>
         [...tasksMap.values()].sort((a, b) => a.name.localeCompare(b.name))
       )
     );

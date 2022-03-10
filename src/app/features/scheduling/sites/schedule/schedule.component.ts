@@ -42,7 +42,7 @@ export class ScheduleComponent implements OnInit {
                 sensors: data[0],
                 switchers: data[1]
               },
-              width: '50vh'
+              width: '50vw'
             })
             .afterClosed()
         ),

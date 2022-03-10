@@ -1,5 +1,5 @@
 import { Type } from './type';
-import { ControlType } from './control-type';
+import { ScheduleType } from './schedule-type';
 
 export const units: { [key: string]: number } = {
   milliseconds: 1,
@@ -15,13 +15,13 @@ Object.seal(units);
 export interface Task {
   name: string;
   expression: string;
-  controlType: ControlType;
+  scheduleType: ScheduleType;
   actionType: Type;
   data: Map<string, string>;
 }
 
 export const getExpressionValue = (task: Task): string => {
-  if (task.controlType === ControlType.CRON) {
+  if (task.scheduleType === ScheduleType.CRON) {
     return task.expression;
   } else {
     return calculatePeriod(Number.parseInt(task.expression, 10)).toString();

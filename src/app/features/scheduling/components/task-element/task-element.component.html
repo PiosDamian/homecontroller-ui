@@ -1,7 +1,7 @@
 <mat-list-item>
   <div class="flex p-0-5">
     <div>
-      <span>{{task.name}}</span> - <span>{{task.actionType }}, {{task.controlType}}: <span ngNonBindable>&#123;</span>{{expression}}<span ngNonBindable>&#125;</span></span>
+      <span>{{task.name}}</span> - <span>{{task.actionType }}, {{task.scheduleType}}: <span ngNonBindable>&#123;</span>{{expression}}<span ngNonBindable>&#125;</span></span>
     </div>
     <div *ngIf="canEdit">
       <button mat-icon-button color="warn" (click)="removeTask.emit(task)">

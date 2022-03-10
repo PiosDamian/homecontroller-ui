@@ -11,7 +11,7 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
-import { ControlType } from '../../model/control-type';
+import { ScheduleType } from '../../model/schedule-type';
 import { Type } from '../../model/type';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Switcher } from '../../../switchers/model/response/switcher.model';
@@ -40,7 +40,7 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       name: new FormControl('', { validators: [Validators.required] }),
       expression: new FormControl(1, { validators: [Validators.required] }),
-      controlType: new FormControl(ControlType.PERIOD),
+      scheduleType: new FormControl(ScheduleType.PERIOD),
       actionType: new FormControl(Type.SWITCH),
       data: new FormGroup({
         address: new FormControl(null, { validators: [Validators.required] })
@@ -48,14 +48,14 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
     });
 
     this.form
-      .get('controlType')
+      .get('scheduleType')
       .valueChanges.pipe(takeUntil(this._till$))
-      .subscribe((type: ControlType) => {
+      .subscribe((type: ScheduleType) => {
         const expressionField = this.form.get('expression');
-        if (type === ControlType.PERIOD) {
-          expressionField.setValue(1, { emitEvent: false });
+        if (type === ScheduleType.PERIOD) {
+          expressionField.patchValue(1, { emitEvent: false });
         } else {
-          expressionField.setValue('* * * * * *', { emitEvent: false });
+          expressionField.patchValue('* * * * * *', { emitEvent: false });
         }
       });
   }
