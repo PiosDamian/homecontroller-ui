@@ -8,7 +8,7 @@ export class Switcher implements BaseSwitcher {
   public state: SwitcherState;
 
   constructor(obj?: any) {
-    if (!obj.address) {
+    if (obj.address == null) {
       throw new Error('Switcher have to have address');
     }
     this.address = obj.address;

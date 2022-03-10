@@ -26,8 +26,8 @@ import { takeUntil } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreateTaskComponent implements OnInit, OnDestroy {
-  private readonly _till$ = new Subject<void>();
   form: FormGroup;
+  private readonly _till$ = new Subject<void>();
 
   constructor(
     private readonly fb: FormBuilder,
@@ -53,9 +53,9 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
       .subscribe((type: ControlType) => {
         const expressionField = this.form.get('expression');
         if (type === ControlType.PERIOD) {
-          expressionField.patchValue(1);
+          expressionField.setValue(1, { emitEvent: false });
         } else {
-          expressionField.patchValue('* * * * *');
+          expressionField.setValue('* * * * * *', { emitEvent: false });
         }
       });
   }

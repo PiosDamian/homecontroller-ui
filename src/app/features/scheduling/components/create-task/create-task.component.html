@@ -1,53 +1,56 @@
 <h2 mat-dialog-title>Create task</h2>
-<form [formGroup]='form' mat-dialog-content autocomplete='off'>
-  <mat-form-field>
-    <mat-label>Name</mat-label>
-    <input matInput formControlName='name' type='text'>
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Control type</mat-label>
-    <mat-select formControlName='controlType'>
-      <mat-option value='PERIOD'>Period</mat-option>
-      <mat-option value='CRON'>Cron</mat-option>
-    </mat-select>
-  </mat-form-field>
-  <ng-container *ngIf='form.get("controlType").value === "PERIOD"; else cron'>
-    <app-period-control formControlName='expression'></app-period-control>
-  </ng-container>
-  <ng-template #cron>
+<div mat-dialog-content>
+  <form [formGroup]='form' autocomplete='off' (ngSubmit)='form.valid && submit()'>
     <mat-form-field>
-      <mat-label>Cron expression</mat-label>
-      <input matInput formControlName='expression' type='text'>
+      <mat-label>Name</mat-label>
+      <input matInput formControlName='name' type='text'>
+      <mat-error *ngIf="form?.get('name').hasError('e')">e error</mat-error>
     </mat-form-field>
-  </ng-template>
-  <mat-form-field>
-    <mat-label>Type of operation to perform</mat-label>
-    <mat-select formControlName='actionType'>
-      <mat-option value='SWITCH'>Switch</mat-option>
-      <mat-option value='READ_VALUE'>Read value</mat-option>
-    </mat-select>
-  </mat-form-field>
-  <mat-error *ngIf='!hasDevices(); else canSelectAddress'>No registered devices for this task</mat-error>
-  <ng-template #canSelectAddress>
-    <ng-container formGroupName='data'>
-      <mat-form-field>
-        <mat-label>GPIO address</mat-label>
-        <mat-select formControlName='address'>
-          <mat-option *ngFor='let device of $any(devicesForTyp())' [value]='device.address'>{{device.name}}</mat-option>
-        </mat-select>
-      </mat-form-field>
+    <mat-form-field>
+      <mat-label>Control type</mat-label>
+      <mat-select formControlName='controlType'>
+        <mat-option value='PERIOD'>Period</mat-option>
+        <mat-option value='CRON'>Cron</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <ng-container *ngIf='form.get("controlType").value === "PERIOD"; else cron'>
+      <app-period-control formControlName='expression'></app-period-control>
     </ng-container>
-  </ng-template>
-  <div mat-dialog-actions class='flex'>
-    <button mat-stroked-button color="accent" (click)="submit()" [disabled]="form.invalid">
-      <mat-icon>
-        save
-      </mat-icon>
-    </button>
-    <button mat-stroked-button color="primary" [mat-dialog-close]='null'>
-      <mat-icon>
-        close
-      </mat-icon>
-    </button>
-  </div>
-</form>
+    <ng-template #cron>
+      <mat-form-field>
+        <mat-label>Cron expression</mat-label>
+        <input matInput formControlName='expression' type='text'>
+      </mat-form-field>
+    </ng-template>
+    <mat-form-field>
+      <mat-label>Type of operation to perform</mat-label>
+      <mat-select formControlName='actionType'>
+        <mat-option value='SWITCH'>Switch</mat-option>
+        <mat-option value='READ_VALUE'>Read value</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-error *ngIf='!hasDevices(); else canSelectAddress'>No registered devices for this task</mat-error>
+    <ng-template #canSelectAddress>
+      <ng-container formGroupName='data'>
+        <mat-form-field>
+          <mat-label>GPIO address</mat-label>
+          <mat-select formControlName='address'>
+            <mat-option *ngFor='let device of $any(devicesForTyp())' [value]='device.address'>{{device.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </ng-container>
+    </ng-template>
+  </form>
+</div>
+<div mat-dialog-actions class='flex'>
+  <button mat-stroked-button color='accent' (click)='submit()' [disabled]='form.invalid'>
+    <mat-icon>
+      save
+    </mat-icon>
+  </button>
+  <button mat-stroked-button color='primary' [mat-dialog-close]='null'>
+    <mat-icon>
+      close
+    </mat-icon>
+  </button>
+</div>

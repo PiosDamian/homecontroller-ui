@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { ScheduleService } from '../../services/schedule/schedule.service';
 import { combineLatest, Observable, of } from 'rxjs';
 import { Task } from '../../model/task';
@@ -19,9 +19,9 @@ export class ScheduleComponent implements OnInit {
 
   constructor(
     private readonly scheduleService: ScheduleService,
-    @Inject(CAN_EDIT_TASKS) readonly canEdit$ = of(false),
     private readonly matDialog: MatDialog,
-    private matBottomSheet: MatBottomSheet
+    private readonly matBottomSheet: MatBottomSheet,
+    @Inject(CAN_EDIT_TASKS) @Optional() readonly canEdit$ = of(false)
   ) {}
 
   ngOnInit(): void {
@@ -41,7 +41,8 @@ export class ScheduleComponent implements OnInit {
               data: {
                 sensors: data[0],
                 switchers: data[1]
-              }
+              },
+              width: '50vh'
             })
             .afterClosed()
         ),
