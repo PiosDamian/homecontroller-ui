@@ -14,17 +14,34 @@ Object.seal(units);
 
 export interface Task {
   name: string;
-  expression: string;
-  scheduleType: ScheduleType;
+  scheduleDefinition: ScheduleDefinition;
   actionType: Type;
   data: Map<string, string>;
 }
 
-export const getExpressionValue = (task: Task): string => {
-  if (task.scheduleType === ScheduleType.CRON) {
-    return task.expression;
+export interface ScheduleDefinition {
+  expression: string;
+  scheduleType: ScheduleType;
+}
+
+export const getExpressionValue = (
+  scheduleDefinition: ScheduleDefinition
+): string => {
+  if (scheduleDefinition.scheduleType === ScheduleType.CRON) {
+    return scheduleDefinition.expression;
+  } else if (
+    scheduleDefinition.scheduleType === ScheduleType.PERIOD_WITH_START
+  ) {
+    const definition = JSON.parse(scheduleDefinition.expression);
+    return `start: { hour: ${definition.start.hour}, hour: ${
+      definition.start.hour
+    }, hour: ${definition.start.hour} }, period: { ${calculatePeriod(
+      Number.parseInt(definition.period, 10)
+    ).toString()} }`;
   } else {
-    return calculatePeriod(Number.parseInt(task.expression, 10)).toString();
+    return calculatePeriod(
+      Number.parseInt(scheduleDefinition.expression, 10)
+    ).toString();
   }
 };
 

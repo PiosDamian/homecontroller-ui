@@ -1,4 +1,11 @@
-import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HTTP_INTERCEPTORS } from '@angular/common/http';
+import {
+  HttpErrorResponse,
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
+  HTTP_INTERCEPTORS
+} from '@angular/common/http';
 import { ClassProvider, Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
@@ -7,16 +14,26 @@ import { CommunicationService } from '../../communication/communication.service'
 
 @Injectable()
 export class CommunicationInterceptor implements HttpInterceptor {
-  private static nonBlockingRequests = [endpoints.registerListener, endpoints.unregisterListener];
+  private static nonBlockingRequests = [
+    endpoints.registerListener,
+    endpoints.unregisterListener
+  ];
 
   constructor(private communicationService: CommunicationService) {}
 
   static addNonBlockingRequests(urls: string[]) {
-    urls.forEach(url => CommunicationInterceptor.nonBlockingRequests.push(url));
+    urls.forEach((url) =>
+      CommunicationInterceptor.nonBlockingRequests.push(url)
+    );
   }
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const canShowSpinner = !CommunicationInterceptor.nonBlockingRequests.some(url => req.url.startsWith(url));
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
+    const canShowSpinner = !CommunicationInterceptor.nonBlockingRequests.some(
+      (url) => req.url.startsWith(url)
+    );
     if (canShowSpinner) {
       this.communicationService.showSpinner();
     }

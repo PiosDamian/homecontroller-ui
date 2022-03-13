@@ -1,4 +1,5 @@
-export const enum ScheduleType {
+export enum ScheduleType {
   CRON = 'CRON',
-  PERIOD = 'PERIOD'
+  PERIOD = 'PERIOD',
+  PERIOD_WITH_START = 'PERIOD_WITH_START'
 }

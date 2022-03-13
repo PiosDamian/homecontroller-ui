@@ -6,22 +6,24 @@
       <input matInput formControlName='name' type='text'>
       <mat-error *ngIf="form?.get('name').hasError('e')">e error</mat-error>
     </mat-form-field>
-    <mat-form-field>
-      <mat-label>Control type</mat-label>
-      <mat-select formControlName='scheduleType'>
-        <mat-option value='PERIOD'>Period</mat-option>
-        <mat-option value='CRON'>Cron</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <ng-container *ngIf='form.get("scheduleType").value === "PERIOD"; else cron'>
-      <app-period-control formControlName='expression'></app-period-control>
-    </ng-container>
-    <ng-template #cron>
+    <ng-container formGroupName='scheduleDefinition'>
       <mat-form-field>
-        <mat-label>Cron expression</mat-label>
-        <input matInput formControlName='expression' type='text'>
+        <mat-label>Control type</mat-label>
+        <mat-select formControlName='scheduleType'>
+          <mat-option *ngFor='let scheduleType of scheduleTypes' [value]='scheduleType'>{{scheduleType}}</mat-option>
+        </mat-select>
       </mat-form-field>
-    </ng-template>
+      <ng-container [ngSwitch]='form.get("scheduleDefinition").get("scheduleType").value'>
+        <app-period-control *ngSwitchCase='"PERIOD"' formControlName='expression'></app-period-control>
+        <ng-container *ngSwitchCase='"CRON"'>
+          <mat-form-field>
+            <mat-label>Cron expression</mat-label>
+            <input matInput formControlName='expression' type='text'>
+          </mat-form-field>
+        </ng-container>
+        <app-period-with-start-control *ngSwitchCase='"PERIOD_WITH_START"' formControlName='expression'></app-period-with-start-control>
+      </ng-container>
+    </ng-container>
     <mat-form-field>
       <mat-label>Type of operation to perform</mat-label>
       <mat-select formControlName='actionType'>

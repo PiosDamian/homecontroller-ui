@@ -28,6 +28,7 @@ import { takeUntil } from 'rxjs/operators';
 export class CreateTaskComponent implements OnInit, OnDestroy {
   form: FormGroup;
   private readonly _till$ = new Subject<void>();
+  readonly scheduleTypes: string[] = Object.keys(ScheduleType);
 
   constructor(
     private readonly fb: FormBuilder,
@@ -39,23 +40,33 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.form = this.fb.group({
       name: new FormControl('', { validators: [Validators.required] }),
-      expression: new FormControl(1, { validators: [Validators.required] }),
-      scheduleType: new FormControl(ScheduleType.PERIOD),
+      scheduleDefinition: new FormGroup({
+        expression: new FormControl(1000 * 60 /* one minute */, {
+          validators: [Validators.required]
+        }),
+        scheduleType: new FormControl(ScheduleType.PERIOD_WITH_START)
+      }),
       actionType: new FormControl(Type.SWITCH),
       data: new FormGroup({
         address: new FormControl(null, { validators: [Validators.required] })
       })
     });
 
+    // todo: add validations for each expression
     this.form
+      .get('scheduleDefinition')
       .get('scheduleType')
       .valueChanges.pipe(takeUntil(this._till$))
       .subscribe((type: ScheduleType) => {
-        const expressionField = this.form.get('expression');
+        const expressionField = this.form
+          .get('scheduleDefinition')
+          .get('expression');
         if (type === ScheduleType.PERIOD) {
-          expressionField.patchValue(1, { emitEvent: false });
+          expressionField.patchValue(1000 * 60);
+        } else if (type === ScheduleType.PERIOD_WITH_START) {
+          expressionField.patchValue(JSON.stringify({}));
         } else {
-          expressionField.patchValue('* * * * * *', { emitEvent: false });
+          expressionField.patchValue('* * * * * *');
         }
       });
   }
