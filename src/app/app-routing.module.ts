@@ -34,6 +34,7 @@ const routes: Routes = [
   imports: [
     RouterModule.forRoot(routes, { useHash: true, enableTracing: false })
   ],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [CanActivateSchedulingFeatureGuard]
 })
 export class AppRoutingModule {}

@@ -4,6 +4,7 @@ html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
@@ -25,4 +26,15 @@ body {
   &.right {
     justify-content: flex-end;
   }
+
+  .mat-form-field:not(.mat-form-field-type-mat-select) {
+    .mat-form-field-wrapper {
+      width: 100%;
+
+      .mat-form-field-infix {
+        width: 100%;
+      }
+    }
+  }
+
 }
