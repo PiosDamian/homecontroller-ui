@@ -6,7 +6,7 @@
         </mat-button-toggle>
         <mat-button-toggle mat-button [routerLink]="['sensors']" routerLinkActive='mat-button-toggle-checked'>Sensors
         </mat-button-toggle>
-        <mat-button-toggle mat-button [routerLink]="['schedule']" routerLinkActive='mat-button-toggle-checked'>Schedule
+        <mat-button-toggle *ngIf='canEditTasks$ | async' mat-button [routerLink]="['schedule']" routerLinkActive='mat-button-toggle-checked'>Schedule
         </mat-button-toggle>
       </mat-button-toggle-group>
     </mat-toolbar>

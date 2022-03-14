@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CanActivateSchedulingFeatureGuard } from './features/sensors/guards/can-activate-scheduling-feature-guard.service';
 
 const routes: Routes = [
   {
@@ -19,7 +20,8 @@ const routes: Routes = [
     loadChildren: () =>
       import('./features/scheduling/scheduling.module').then(
         (m) => m.SchedulingModule
-      )
+      ),
+    canLoad: [CanActivateSchedulingFeatureGuard]
   },
   {
     path: '',
