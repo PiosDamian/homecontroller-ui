@@ -11,7 +11,7 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
-import { ControlType } from '../../model/control-type';
+import { ScheduleType } from '../../model/schedule-type';
 import { Type } from '../../model/type';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Switcher } from '../../../switchers/model/response/switcher.model';
@@ -26,8 +26,9 @@ import { takeUntil } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreateTaskComponent implements OnInit, OnDestroy {
-  private readonly _till$ = new Subject<void>();
   form: FormGroup;
+  private readonly _till$ = new Subject<void>();
+  readonly scheduleTypes: string[] = Object.keys(ScheduleType);
 
   constructor(
     private readonly fb: FormBuilder,
@@ -39,23 +40,33 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.form = this.fb.group({
       name: new FormControl('', { validators: [Validators.required] }),
-      expression: new FormControl(1, { validators: [Validators.required] }),
-      controlType: new FormControl(ControlType.PERIOD),
+      scheduleDefinition: new FormGroup({
+        expression: new FormControl(1000 * 60 /* one minute */, {
+          validators: [Validators.required]
+        }),
+        scheduleType: new FormControl(ScheduleType.PERIOD_WITH_START)
+      }),
       actionType: new FormControl(Type.SWITCH),
       data: new FormGroup({
         address: new FormControl(null, { validators: [Validators.required] })
       })
     });
 
+    // todo: add validations for each expression
     this.form
-      .get('controlType')
+      .get('scheduleDefinition')
+      .get('scheduleType')
       .valueChanges.pipe(takeUntil(this._till$))
-      .subscribe((type: ControlType) => {
-        const expressionField = this.form.get('expression');
-        if (type === ControlType.PERIOD) {
-          expressionField.patchValue(1);
+      .subscribe((type: ScheduleType) => {
+        const expressionField = this.form
+          .get('scheduleDefinition')
+          .get('expression');
+        if (type === ScheduleType.PERIOD) {
+          expressionField.patchValue(1000 * 60);
+        } else if (type === ScheduleType.PERIOD_WITH_START) {
+          expressionField.patchValue(JSON.stringify({}));
         } else {
-          expressionField.patchValue('* * * * *');
+          expressionField.patchValue('* * * * * *');
         }
       });
   }

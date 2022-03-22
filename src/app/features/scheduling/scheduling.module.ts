@@ -18,6 +18,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { PeriodWithStartControlComponent } from './components/period-with-start-control/period-with-start-control.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { MatSelectModule } from '@angular/material/select';
     DeleteTaskComponent,
     TasksListComponent,
     TaskElementComponent,
-    PeriodControlComponent
+    PeriodControlComponent,
+    PeriodWithStartControlComponent
   ],
   imports: [
     CommonModule,

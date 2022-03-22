@@ -9,13 +9,13 @@ import {
   ControlValueAccessor,
   FormBuilder,
   FormControl,
-  FormGroup,
   NG_VALUE_ACCESSOR,
   Validators
 } from '@angular/forms';
 import { combineLatest, Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { calculatePeriod, units } from '../../model/task';
+import { FormControlBoilerplate } from '../../../../shared/utils/FormControl';
 
 @Component({
   selector: 'app-period-control',
@@ -31,15 +31,14 @@ import { calculatePeriod, units } from '../../model/task';
   ]
 })
 export class PeriodControlComponent
+  extends FormControlBoilerplate
   implements OnInit, ControlValueAccessor, OnDestroy
 {
   private readonly _till$ = new Subject<void>();
-  form: FormGroup;
 
-  onTouch = () => {};
-  private onChange = (_) => {};
-
-  constructor(private readonly fb: FormBuilder) {}
+  constructor(fb: FormBuilder) {
+    super(fb);
+  }
 
   isValid() {
     return this.form.valid;
@@ -50,7 +49,9 @@ export class PeriodControlComponent
       amount: new FormControl(1, {
         validators: [Validators.required, Validators.min(1)]
       }),
-      unit: new FormControl('days', { validators: [Validators.required] })
+      unit: new FormControl('days', {
+        validators: [Validators.required, Validators.min(0)]
+      })
     });
 
     combineLatest([
@@ -73,19 +74,8 @@ export class PeriodControlComponent
   }
 
   registerOnChange(fn: any): void {
-    this.onChange = fn;
-  }
-
-  registerOnTouched(fn: any): void {
-    this.onTouch = fn;
-  }
-
-  setDisabledState(isDisabled: boolean): void {
-    if (isDisabled) {
-      this.form.disable();
-    } else {
-      this.form.enable();
-    }
+    super.registerOnChange(fn);
+    this.onChange(this.getValue());
   }
 
   writeValue(obj: number): void {

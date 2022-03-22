@@ -1,0 +1,26 @@
+<form [formGroup]='form' autocomplete='off' (click)='onTouch()'>
+  <div class='flex' formGroupName='start'>
+    <mat-form-field>
+      <mat-label>Hour</mat-label>
+      <input type='number' matInput formControlName='hour'>
+      <mat-error *ngIf='form.get("start").get("hour").hasError("required")'>Field is required</mat-error>
+      <mat-error *ngIf='form.get("start").get("hour").hasError("min")'>Value can't be less then 0</mat-error>
+      <mat-error *ngIf='form.get("start").get("hour").hasError("max")'>Value can't be more then 23</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Minute</mat-label>
+      <input type='number' matInput formControlName='minute'>
+      <mat-error *ngIf='form.get("start").get("minute").hasError("required")'>Field is required</mat-error>
+      <mat-error *ngIf='form.get("start").get("minute").hasError("min")'>Value can't be less then 0</mat-error>
+      <mat-error *ngIf='form.get("start").get("minute").hasError("max")'>Value can't be more then 59</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Second</mat-label>
+      <input type='number' matInput formControlName='second'>
+      <mat-error *ngIf='form.get("start").get("second").hasError("required")'>Field is required</mat-error>
+      <mat-error *ngIf='form.get("start").get("second").hasError("min")'>Value can't be less then 0</mat-error>
+      <mat-error *ngIf='form.get("start").get("second").hasError("max")'>Value can't be more then 59</mat-error>
+    </mat-form-field>
+  </div>
+  <app-period-control formControlName='period'></app-period-control>
+</form>

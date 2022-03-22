@@ -28,6 +28,8 @@ export class TaskElementComponent implements OnChanges {
   expression: string;
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.expression = getExpressionValue(changes.task.currentValue);
+    this.expression = getExpressionValue(
+      (changes.task.currentValue as Task).scheduleDefinition
+    );
   }
 }
