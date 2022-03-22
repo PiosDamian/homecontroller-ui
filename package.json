@@ -24,7 +24,7 @@
     "@angular/router": "~9.1.12",
     "@angular/service-worker": "~9.1.12",
     "@orchestrator/ngx-until-destroyed": "^1.1.1",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "rxjs": "~6.6.0",
     "rxjs-blocking-queue": "^1.0.2",
     "tslib": "^1.10.0",
